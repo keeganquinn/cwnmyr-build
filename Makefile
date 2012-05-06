@@ -1,16 +1,29 @@
 OPENWRT_GIT = git://nbd.name/openwrt.git
 
-.PHONY: default prepare all net4521
+.PHONY: default clean prepare all mr3201a net4521
 
 default: all
+
+clean:
+	rm -rf image
 
 prepare:
 	[ -d openwrt ] && (cd openwrt; git pull) || git clone $(OPENWRT_GIT)
 	cp share/feeds.conf openwrt/feeds.conf
 	openwrt/scripts/feeds update -a
 	openwrt/scripts/feeds install -a
+	mkdir -p image
 
-all: net4521
+all: mr3201a net4521
+
+mr3201a: prepare device/mr3201a/config
+	rm -rf openwrt/.config openwrt/.config.old openwrt/bin openwrt/files
+	cp device/mr3201a/config openwrt/.config
+	cp -r share/files openwrt/files
+	cp -r device/mr3201a/files/* openwrt/files/
+	(cd openwrt; make oldconfig)
+	(cd openwrt; make)
+	cp openwrt/bin/atheros/*-combined.squashfs.img image/ptpwrt-mr3201a.img
 
 net4521: prepare device/net4521/config
 	rm -rf openwrt/.config openwrt/.config.old openwrt/bin openwrt/files
@@ -19,5 +32,4 @@ net4521: prepare device/net4521/config
 	cp -r device/net4521/files/* openwrt/files/
 	(cd openwrt; make oldconfig)
 	(cd openwrt; make)
-	mkdir -p image
 	cp openwrt/bin/x86/*-combined-squashfs.img image/ptpwrt-net4521.img

@@ -12,9 +12,9 @@ prepare:
 
 all: net4521
 
-net4521: prepare devices/net4521/config
+net4521: prepare device/net4521/config
 	rm -rf openwrt/.config openwrt/.config.old openwrt/files
-	cp devices/net4521/config openwrt/.config
+	cp device/net4521/config openwrt/.config
 	cp -r share/files openwrt/files
-	cp -r devices/net4521/files/* openwrt/files/
+	cp -r device/net4521/files/* openwrt/files/
 	(cd openwrt; make oldconfig)

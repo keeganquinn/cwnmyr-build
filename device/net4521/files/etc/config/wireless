@@ -1,0 +1,19 @@
+config wifi-device  radio0
+	option type     mac80211
+	option phy	phy0
+	option channel  11
+
+config wifi-iface
+	option device	radio0
+	option network	lan
+	option mode	ap
+	option ssid	www.personaltelco.net/notyet
+	option encryption none
+
+config wifi-iface
+	option device	radio0
+	option network	mesh
+	option mode	adhoc
+	option ssid	ptp-mesh
+	option encryption none
+

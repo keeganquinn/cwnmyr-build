@@ -1,7 +1,7 @@
 #
 # Automatically generated make config: don't edit
 # OpenWrt version: Attitude Adjustment (r31620)
-# Sat May  5 16:06:15 2012
+# Sat May  5 17:55:30 2012
 #
 CONFIG_HAVE_DOT_CONFIG=y
 # CONFIG_TARGET_ppc40x is not set
@@ -1287,6 +1287,7 @@ CONFIG_PACKAGE_dropbear=y
 # CONFIG_PACKAGE_ead is not set
 CONFIG_PACKAGE_firewall=y
 CONFIG_PACKAGE_hotplug2=y
+# CONFIG_PACKAGE_hsflowd is not set
 CONFIG_PACKAGE_libc=y
 CONFIG_PACKAGE_libgcc=y
 CONFIG_PACKAGE_libpthread=y
@@ -1299,6 +1300,7 @@ CONFIG_PACKAGE_mtd=y
 CONFIG_PACKAGE_opkg=y
 # CONFIG_PACKAGE_qos-scripts is not set
 # CONFIG_PACKAGE_resolveip is not set
+# CONFIG_PACKAGE_sflowovsd is not set
 # CONFIG_PACKAGE_swconfig is not set
 CONFIG_PACKAGE_uci=y
 # CONFIG_PACKAGE_udev is not set
@@ -1377,6 +1379,7 @@ CONFIG_PACKAGE_radvd=y
 # CONFIG_PACKAGE_tayga is not set
 # CONFIG_PACKAGE_totd is not set
 # CONFIG_PACKAGE_tspc is not set
+# CONFIG_PACKAGE_tunslip6 is not set
 
 #
 # Kernel modules
@@ -2359,6 +2362,7 @@ CONFIG_OPENVPN_DISABLE_MANAGEMENT=y
 # CONFIG_PACKAGE_uanytun-nocrypt is not set
 # CONFIG_PACKAGE_uanytun-sslcrypt is not set
 # CONFIG_PACKAGE_vpnc is not set
+# CONFIG_PACKAGE_vpnc-scripts is not set
 # CONFIG_PACKAGE_vpzone is not set
 # CONFIG_PACKAGE_vtun is not set
 # CONFIG_PACKAGE_xl2tpd is not set
@@ -2445,10 +2449,12 @@ CONFIG_OPENVPN_DISABLE_MANAGEMENT=y
 # CONFIG_PACKAGE_cdp-tools is not set
 # CONFIG_PACKAGE_cgps is not set
 # CONFIG_PACKAGE_chat is not set
+# CONFIG_PACKAGE_cifsmount is not set
 CONFIG_PACKAGE_crda=y
 # CONFIG_PACKAGE_cups is not set
 # CONFIG_PACKAGE_cutter is not set
 # CONFIG_PACKAGE_darkstat is not set
+# CONFIG_PACKAGE_dhcp4 is not set
 # CONFIG_PACKAGE_ditg is not set
 # CONFIG_PACKAGE_dmapd is not set
 # CONFIG_PACKAGE_dsl-qos-queue is not set
@@ -2678,6 +2684,7 @@ CONFIG_PACKAGE_libopenssl=y
 # CONFIG_PACKAGE_libsqlite2 is not set
 # CONFIG_PACKAGE_libsqlite3 is not set
 # CONFIG_PACKAGE_tokyocabinet is not set
+# CONFIG_PACKAGE_unixodbc is not set
 # CONFIG_PACKAGE_alsa-lib is not set
 # CONFIG_PACKAGE_argp-standalone is not set
 # CONFIG_PACKAGE_argtable is not set
@@ -2983,7 +2990,6 @@ CONFIG_PACKAGE_zlib=y
 #
 # PTP
 #
-# CONFIG_PACKAGE_nocatauth-ptp is not set
 CONFIG_PACKAGE_ptp-node=y
 CONFIG_PACKAGE_ptp-utils=y
 
@@ -3231,6 +3237,7 @@ CONFIG_PACKAGE_grub=y
 # CONFIG_PACKAGE_mysql-server is not set
 # CONFIG_PACKAGE_sqlite2-cli is not set
 # CONFIG_PACKAGE_sqlite3-cli is not set
+# CONFIG_PACKAGE_unixodbc-tools is not set
 
 #
 # disc
@@ -3344,6 +3351,7 @@ CONFIG_PACKAGE_grub=y
 # CONFIG_PACKAGE_gsm-utils is not set
 # CONFIG_PACKAGE_gzip is not set
 # CONFIG_PACKAGE_haserl is not set
+# CONFIG_PACKAGE_haveged is not set
 # CONFIG_PACKAGE_heyu is not set
 # CONFIG_PACKAGE_hplip is not set
 # CONFIG_PACKAGE_huaweiaktbbo is not set
@@ -3359,6 +3367,7 @@ CONFIG_PACKAGE_iwinfo=y
 # CONFIG_PACKAGE_jpeg-tools is not set
 # CONFIG_PACKAGE_jshn is not set
 # CONFIG_PACKAGE_kexec-tools is not set
+# CONFIG_PACKAGE_klish is not set
 # CONFIG_PACKAGE_kmemtrace-user is not set
 # CONFIG_PACKAGE_ksymoops is not set
 # CONFIG_PACKAGE_lcd4linux-custom is not set
@@ -3565,6 +3574,7 @@ CONFIG_PACKAGE_procps=y
 # CONFIG_PACKAGE_luaposix is not set
 # CONFIG_PACKAGE_luaprofiler is not set
 # CONFIG_PACKAGE_luasec is not set
+# CONFIG_PACKAGE_luasoap is not set
 # CONFIG_PACKAGE_luasocket is not set
 # CONFIG_PACKAGE_luasql-mysql is not set
 # CONFIG_PACKAGE_luasql-sqlite3 is not set
@@ -3790,6 +3800,7 @@ CONFIG_PACKAGE_perlbase-xsloader=y
 # Ruby
 #
 # CONFIG_PACKAGE_ruby is not set
+# CONFIG_PACKAGE_4th is not set
 # CONFIG_PACKAGE_eggdrop is not set
 # CONFIG_PACKAGE_sigscheme is not set
 # CONFIG_PACKAGE_slsh is not set

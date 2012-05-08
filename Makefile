@@ -20,7 +20,7 @@ mr3201a: prepare device/mr3201a/config
 	rm -rf openwrt/.config openwrt/.config.old openwrt/bin openwrt/files
 	cp device/mr3201a.config openwrt/.config
 	cp -r files openwrt/files
-	cp -r device/mr3201a/files/* openwrt/files/
+	rm -f openwrt/files/etc/config/network.sw
 	(cd openwrt; make oldconfig)
 	(cd openwrt; make)
 	cp openwrt/bin/atheros/*-combined.squashfs.img image/ptpwrt-mr3201a.img
@@ -29,7 +29,7 @@ net4521: prepare device/net4521/config
 	rm -rf openwrt/.config openwrt/.config.old openwrt/bin openwrt/files
 	cp device/net4521.config openwrt/.config
 	cp -r files openwrt/files
-	cp -r device/net4521/files/* openwrt/files/
+	rm -f openwrt/files/etc/config/network.sw
 	(cd openwrt; make oldconfig)
 	(cd openwrt; make)
 	cp openwrt/bin/x86/*-combined-squashfs.img image/ptpwrt-net4521.img
@@ -39,7 +39,7 @@ wgt634u: prepare device/wgt634u/config
 	rm -rf openwrt/.config openwrt/.config.old openwrt/bin openwrt/files
 	cp device/wgt634u.config openwrt/.config
 	cp -r files openwrt/files
-	cp -r device/wgt634u/files/* openwrt/files/
+	mv openwrt/files/etc/config/network.sw openwrt/files/etc/config/network
 	(cd openwrt; make oldconfig)
 	(cd openwrt; make)
 	cp openwrt/bin/brcm47xx/*-wgt634u-squashfs.bin image/ptpwrt-wgt634u.img

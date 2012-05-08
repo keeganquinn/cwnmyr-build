@@ -24,7 +24,6 @@ config 'interface' 'lan'
 	option 'netmask' '255.255.255.0'
 
 config 'interface' 'wan'
-	option 'type' 'bridge'
 	option 'ifname' 'eth0.0'
 	option 'proto' 'dhcp'
 	#option 'proto' 'static'

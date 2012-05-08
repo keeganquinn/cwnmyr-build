@@ -1,7 +1,7 @@
 #
 # Automatically generated make config: don't edit
-# OpenWrt version: Attitude Adjustment (r31620)
-# Sat May  5 17:55:30 2012
+# OpenWrt version: Attitude Adjustment (r31622)
+# Mon May  7 19:59:30 2012
 #
 CONFIG_HAVE_DOT_CONFIG=y
 # CONFIG_TARGET_ppc40x is not set
@@ -406,7 +406,7 @@ CONFIG_X86_GRUB_SERIAL="ttyS0"
 CONFIG_X86_GRUB_BAUDRATE=19200
 CONFIG_X86_GRUB_BOOTOPTS=""
 CONFIG_X86_GRUB_TIMEOUT="5"
-# CONFIG_X86_VDI_IMAGES is not set
+CONFIG_X86_VDI_IMAGES=y
 # CONFIG_X86_VMDK_IMAGES is not set
 # CONFIG_TARGET_IMAGES_PAD is not set
 CONFIG_TARGET_IMAGES_GZIP=y
@@ -1599,7 +1599,7 @@ CONFIG_PACKAGE_kmod-ipt-nathelper=y
 # CONFIG_PACKAGE_kmod-mvswitch is not set
 CONFIG_PACKAGE_kmod-natsemi=y
 # CONFIG_PACKAGE_kmod-ne2k-pci is not set
-# CONFIG_PACKAGE_kmod-pcnet32 is not set
+CONFIG_PACKAGE_kmod-pcnet32=y
 # CONFIG_PACKAGE_kmod-r8169 is not set
 # CONFIG_PACKAGE_kmod-siit is not set
 # CONFIG_PACKAGE_kmod-sis190 is not set

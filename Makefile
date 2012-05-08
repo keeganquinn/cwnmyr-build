@@ -33,6 +33,7 @@ net4521: prepare device/net4521/config
 	(cd openwrt; make oldconfig)
 	(cd openwrt; make)
 	cp openwrt/bin/x86/*-combined-squashfs.img image/ptpwrt-net4521.img
+	cp openwrt/bin/x86/*-combined-ext4.vdi image/ptpwrt-vbox.vdi
 
 wgt634u: prepare device/wgt634u/config
 	rm -rf openwrt/.config openwrt/.config.old openwrt/bin openwrt/files

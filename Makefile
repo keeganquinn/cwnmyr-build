@@ -9,7 +9,7 @@ clean:
 
 prepare:
 	[ -d openwrt ] && (cd openwrt; git pull) || git clone $(OPENWRT_GIT)
-	cp share/feeds.conf openwrt/feeds.conf
+	cp feeds.conf openwrt/feeds.conf
 	openwrt/scripts/feeds update -a
 	openwrt/scripts/feeds install -a
 	mkdir -p image
@@ -18,8 +18,8 @@ all: mr3201a net4521 wgt634u
 
 mr3201a: prepare device/mr3201a/config
 	rm -rf openwrt/.config openwrt/.config.old openwrt/bin openwrt/files
-	cp device/mr3201a/config openwrt/.config
-	cp -r share/files openwrt/files
+	cp device/mr3201a.config openwrt/.config
+	cp -r files openwrt/files
 	cp -r device/mr3201a/files/* openwrt/files/
 	(cd openwrt; make oldconfig)
 	(cd openwrt; make)
@@ -27,8 +27,8 @@ mr3201a: prepare device/mr3201a/config
 
 net4521: prepare device/net4521/config
 	rm -rf openwrt/.config openwrt/.config.old openwrt/bin openwrt/files
-	cp device/net4521/config openwrt/.config
-	cp -r share/files openwrt/files
+	cp device/net4521.config openwrt/.config
+	cp -r files openwrt/files
 	cp -r device/net4521/files/* openwrt/files/
 	(cd openwrt; make oldconfig)
 	(cd openwrt; make)
@@ -37,8 +37,8 @@ net4521: prepare device/net4521/config
 
 wgt634u: prepare device/wgt634u/config
 	rm -rf openwrt/.config openwrt/.config.old openwrt/bin openwrt/files
-	cp device/wgt634u/config openwrt/.config
-	cp -r share/files openwrt/files
+	cp device/wgt634u.config openwrt/.config
+	cp -r files openwrt/files
 	cp -r device/wgt634u/files/* openwrt/files/
 	(cd openwrt; make oldconfig)
 	(cd openwrt; make)

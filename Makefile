@@ -16,7 +16,7 @@ prepare:
 
 all: mr3201a net4521 wgt634u
 
-mr3201a: prepare device/mr3201a/config
+mr3201a: prepare device/mr3201a.config
 	rm -rf openwrt/.config openwrt/.config.old openwrt/bin openwrt/files
 	cp device/mr3201a.config openwrt/.config
 	cp -r files openwrt/files
@@ -25,7 +25,7 @@ mr3201a: prepare device/mr3201a/config
 	(cd openwrt; make)
 	cp openwrt/bin/atheros/*-combined.squashfs.img image/ptpwrt-mr3201a.img
 
-net4521: prepare device/net4521/config
+net4521: prepare device/net4521.config
 	rm -rf openwrt/.config openwrt/.config.old openwrt/bin openwrt/files
 	cp device/net4521.config openwrt/.config
 	cp -r files openwrt/files
@@ -35,7 +35,7 @@ net4521: prepare device/net4521/config
 	cp openwrt/bin/x86/*-combined-squashfs.img image/ptpwrt-net4521.img
 	cp openwrt/bin/x86/*-combined-ext4.vdi image/ptpwrt-vbox.vdi
 
-wgt634u: prepare device/wgt634u/config
+wgt634u: prepare device/wgt634u.config
 	rm -rf openwrt/.config openwrt/.config.old openwrt/bin openwrt/files
 	cp device/wgt634u.config openwrt/.config
 	cp -r files openwrt/files

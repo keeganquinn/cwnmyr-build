@@ -32,3 +32,6 @@ config 'interface' 'wan'
 	#option 'gateway' '10.1.10.1'
 	#option 'dns' '10.1.10.1'
 
+config 'interface' 'mesh'
+	option 'proto' 'none'
+	option 'mtu' '1527'

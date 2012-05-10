@@ -92,4 +92,4 @@ wgt634u: prepare device/wgt634u.config
 	(cd openwrt; make)
 
 # Copy completed image to output directory
-	cp openwrt/bin/brcm47xx/*-wgt634u-squashfs.bin image/ptpwrt-wgt634u.img
+	cp openwrt/bin/brcm47xx/*-brcm47xx-squashfs.trx image/ptpwrt-wgt634u.trx

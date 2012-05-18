@@ -30,6 +30,10 @@ mr3201a: prepare device/mr3201a.config
 	cp -r files openwrt/files
 	rm -f openwrt/files/etc/config/network.sw
 
+# Activate build configuration and store any changes
+	(cd openwrt; make oldconfig)
+	cp openwrt/.config device/mr3201a.config
+
 # Tag build with configuration and revision information
 	cp device/mr3201a.config openwrt/files/config
 	echo -n "ptp-builder revision: " > openwrt/files/build
@@ -37,8 +41,7 @@ mr3201a: prepare device/mr3201a.config
 	echo -n "openwrt revision: " >> openwrt/files/build
 	(cd openwrt; git rev-parse HEAD) >> openwrt/files/build
 
-# Activate build configuration and build
-	(cd openwrt; make oldconfig)
+# Perform build
 	(cd openwrt; make)
 
 # Copy completed image to output directory
@@ -53,6 +56,10 @@ net4521: prepare device/net4521.config
 	cp -r files openwrt/files
 	rm -f openwrt/files/etc/config/network.sw
 
+# Activate build configuration and store any changes
+	(cd openwrt; make oldconfig)
+	cp openwrt/.config device/net4521.config
+
 # Tag build with configuration and revision information
 	cp device/net4521.config openwrt/files/config
 	echo -n "ptp-builder revision: " > openwrt/files/build
@@ -60,8 +67,7 @@ net4521: prepare device/net4521.config
 	echo -n "openwrt revision: " >> openwrt/files/build
 	(cd openwrt; git rev-parse HEAD) >> openwrt/files/build
 
-# Activate build configuration and build
-	(cd openwrt; make oldconfig)
+# Perform build
 	(cd openwrt; make)
 
 # Copy completed image to output directory
@@ -80,6 +86,10 @@ wgt634u: prepare device/wgt634u.config
 	cp -r files openwrt/files
 	mv openwrt/files/etc/config/network.sw openwrt/files/etc/config/network
 
+# Activate build configuration and store any changes
+	(cd openwrt; make oldconfig)
+	cp openwrt/.config device/wgt634u.config
+
 # Tag build with configuration and revision information
 	cp device/wgt634u.config openwrt/files/config
 	echo -n "ptp-builder revision: " > openwrt/files/build
@@ -87,8 +97,7 @@ wgt634u: prepare device/wgt634u.config
 	echo -n "openwrt revision: " >> openwrt/files/build
 	(cd openwrt; git rev-parse HEAD) >> openwrt/files/build
 
-# Activate build configuration and build
-	(cd openwrt; make oldconfig)
+# Perform build
 	(cd openwrt; make)
 
 # Copy completed image to output directory

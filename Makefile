@@ -1,5 +1,3 @@
-OPENWRT_GIT = git://nbd.name/openwrt.git
-
 .PHONY: default clean prepare all mr3201a net4521 wgt634u
 
 default: all
@@ -7,13 +5,32 @@ default: all
 clean:
 	rm -rf image
 
-prepare:
-# Make sure we have a current openwrt tree
-	[ -d openwrt ] && (cd openwrt; git pull) || git clone $(OPENWRT_GIT)
+distclean: clean
+	rm -rf openwrt
 
-# Install all packages from our feeds
+prepare:
+# Make sure we have the correct openwrt tree
+	[ -d openwrt ] && \
+		(cd openwrt; git fetch origin) || \
+		git clone git://nbd.name/openwrt.git openwrt
+	(cd openwrt; git checkout `cat ../rev-openwrt`)
+
+# Make sure we have the right feeds trees. openwrt/scripts/feeds doesn't
+# support retrieving a specific git revision, so we have to do this ourselves.
+	mkdir -p openwrt/feeds
+	[ -d openwrt/feeds/packages ] && \
+		(cd openwrt/feeds/packages; git fetch origin) || \
+		git clone git://nbd.name/packages.git openwrt/feeds/packages
+	(cd openwrt/feeds/packages; git checkout `cat ../../../rev-packages`)
+	[ -d openwrt/feeds/ptpwrt ] && \
+		(cd openwrt/feeds/ptpwrt; git fetch origin) || \
+		git clone git://github.com/keeganquinn/ptpwrt-packages.git \
+			openwrt/feeds/ptpwrt
+	(cd openwrt/feeds/ptpwrt; git checkout `cat ../../../rev-ptpwrt`)
+
+# Update the package index and install all packages
 	cp feeds.conf openwrt/feeds.conf
-	openwrt/scripts/feeds update -a
+	openwrt/scripts/feeds update -i
 	openwrt/scripts/feeds install -a
 
 # Create output directory for images
@@ -29,10 +46,7 @@ mr3201a: prepare device/mr3201a.config
 	cp device/mr3201a.config openwrt/.config
 	cp -r files openwrt/files
 	rm -f openwrt/files/etc/config/network.sw
-
-# Activate build configuration and store any changes
 	(cd openwrt; make oldconfig)
-	cp openwrt/.config device/mr3201a.config
 
 # Tag build with configuration and revision information
 	cp device/mr3201a.config openwrt/files/config

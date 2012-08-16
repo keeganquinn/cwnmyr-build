@@ -45,6 +45,8 @@ prepare:
 
 # Populate files tree
 	cp -r files openwrt/files
+	git rev-parse HEAD > openwrt/files/rev-builder
+	cp rev-openwrt rev-packages rev-ptpwrt openwrt/files/
 
 prepare-update: prepare
 	(cd openwrt; git checkout master)
@@ -55,6 +57,8 @@ prepare-update: prepare
 
 	(cd openwrt/feeds/ptpwrt; git checkout master)
 	(cd openwrt/feeds/ptpwrt; git rev-parse HEAD > ../../../rev-ptpwrt)
+
+	cp rev-openwrt rev-packages rev-ptpwrt openwrt/files/
 
 # Update the package index and install all packages, again
 	openwrt/scripts/feeds update -i
@@ -67,12 +71,9 @@ update: mr3201a-update net4521-update wgt634u-update
 mr3201a: prepare device/mr3201a.config
 # Install device build and runtime configuration into openwrt tree
 	cp device/mr3201a.config openwrt/.config
-	rm -f openwrt/files/etc/config/network.sw
-	(cd openwrt; make oldconfig)
-
-# Tag build with configuration and revision information
 	cp device/mr3201a.config openwrt/files/config
-	git rev-parse HEAD > openwrt/files/ptpwrt-builder.rev
+	cp openwrt/files/etc/config/network.ok openwrt/files/etc/config/network
+	(cd openwrt; make oldconfig)
 
 # Perform build
 	(cd openwrt; make)
@@ -91,12 +92,9 @@ mr3201a-update: prepare-update device/mr3201a.config
 net4521: prepare device/net4521.config
 # Install device build and runtime configuration into openwrt tree
 	cp device/net4521.config openwrt/.config
-	rm -f openwrt/files/etc/config/network.sw
-	(cd openwrt; make oldconfig)
-
-# Tag build with configuration and revision information
 	cp device/net4521.config openwrt/files/config
-	git rev-parse HEAD > openwrt/files/ptpwrt-builder.rev
+	cp openwrt/files/etc/config/network.ok openwrt/files/etc/config/network
+	(cd openwrt; make oldconfig)
 
 # Perform build
 	(cd openwrt; make)
@@ -119,12 +117,9 @@ net4521-update: prepare-update device/net4521.config
 wgt634u: prepare device/wgt634u.config
 # Install device build and runtime configuration into openwrt tree
 	cp device/wgt634u.config openwrt/.config
-	mv openwrt/files/etc/config/network.sw openwrt/files/etc/config/network
-	(cd openwrt; make oldconfig)
-
-# Tag build with configuration and revision information
 	cp device/wgt634u.config openwrt/files/config
-	git rev-parse HEAD > openwrt/files/ptpwrt-builder.rev
+	cp openwrt/files/etc/config/network.sw openwrt/files/etc/config/network
+	(cd openwrt; make oldconfig)
 
 # Perform build
 	(cd openwrt; make)

@@ -17,10 +17,22 @@ targets which are commonly utilized as PTP nodes.
 Device Support
 --------------
 
-Currently, three targets are supported: mr3201a, net4521 and wgt634u.
+Currently, three targets are supported: `mr3201a`, `net4521` and `wgt634u`.
 
 All that is needed to add support for additional targets is an appropriate
-openwrt .config file for each one - contributions are welcome!
+OpenWrt `.config` file for each device - contributions are welcome! Here's how
+to create one:
+
+    make prepare-update
+    cd openwrt
+    rm -f .config .config.old
+    make menuconfig
+
+Use the menu system to select the correct options for your hardware platform.
+Be sure to select the Personal Telco Node metapackage, as well as the correct
+hardware options. When you're done, there should be a `.config` file in the
+working directory. Send it to `keeganquinn@gmail.com` with a description of
+the new target platform to have it included in the distribution.
 
 Usage
 -----

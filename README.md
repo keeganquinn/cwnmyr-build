@@ -14,6 +14,14 @@ documented in the FooCabFirmwareHowTo wiki page, building standardized
 binary images with generic configuration files for each of the device
 targets which are commonly utilized as PTP nodes.
 
+Device Support
+--------------
+
+Currently, three targets are supported: mr3201a, net4521 and wgt634u.
+
+All that is needed to add support for additional targets is an appropriate
+openwrt .config file for each one - contributions are welcome!
+
 Usage
 -----
 
@@ -21,6 +29,19 @@ Simply:
 
     git clone git://github.com/keeganquinn/ptpwrt-builder.git
     cd ptpwrt-builder
-    make
+    make <target>
 
-Resulting images will be stored in the `image` subdirectory.
+Resulting images will be stored in the `image` subdirectory. If you do not
+select a target, all available targets will be built. Be aware, this can take
+quite a long time and a lot of disk space.
+
+To update to the latest openwrt and packages trees and generate a new
+matching .config:
+
+    make <target>-update
+
+For interactive configuration changes:
+
+    make <target>-update UPDATE_TARGET=menuconfig
+
+After updating the build configuration, you can perform a new build.

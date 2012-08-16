@@ -1,3 +1,7 @@
+ifndef UPDATE_TARGET
+    UPDATE_TARGET := 'oldconfig'
+endif
+
 .PHONY: default clean prepare all mr3201a net4521 wgt634u
 
 default: all
@@ -36,7 +40,19 @@ prepare:
 # Create output directory for images
 	mkdir -p image
 
+prepare-update: prepare
+	(cd openwrt; git checkout master)
+	(cd openwrt; git rev-parse HEAD > ../rev-openwrt)
+
+	(cd openwrt/feeds/packages; git checkout master)
+	(cd openwrt/feeds/packages; git rev-parse HEAD > ../../../rev-packages)
+
+	(cd openwrt/feeds/ptpwrt; git checkout master)
+	(cd openwrt/feeds/ptpwrt; git rev-parse HEAD > ../../../rev-ptpwrt)
+
 all: mr3201a net4521 wgt634u
+
+update: mr3201a-update net4521-update wgt634u-update
 
 mr3201a: prepare device/mr3201a.config
 # Ensure critical parts of openwrt tree are clean before (re)populating them
@@ -50,16 +66,24 @@ mr3201a: prepare device/mr3201a.config
 
 # Tag build with configuration and revision information
 	cp device/mr3201a.config openwrt/files/config
-	echo -n "ptp-builder revision: " > openwrt/files/build
-	git rev-parse HEAD >> openwrt/files/build
-	echo -n "openwrt revision: " >> openwrt/files/build
-	(cd openwrt; git rev-parse HEAD) >> openwrt/files/build
+	git rev-parse HEAD > openwrt/files/ptpwrt-builder.rev
 
 # Perform build
 	(cd openwrt; make)
 
 # Copy completed image to output directory
 	cp openwrt/bin/atheros/*-combined.squashfs.img image/ptpwrt-mr3201a.img
+
+mr3201a-update: prepare-update device/mr3201a.config
+# Ensure critical parts of openwrt tree are clean before (re)populating them
+	rm -rf openwrt/.config openwrt/.config.old openwrt/bin openwrt/files
+
+# Install build configuration to be updated
+	cp device/mr3201a.config openwrt/.config
+
+# Update build configuration and store the result
+	(cd openwrt; make $(UPDATE_TARGET))
+	cp openwrt/.config device/mr3201a.config
 
 net4521: prepare device/net4521.config
 # Ensure critical parts of openwrt tree are clean before (re)populating them
@@ -73,10 +97,7 @@ net4521: prepare device/net4521.config
 
 # Tag build with configuration and revision information
 	cp device/net4521.config openwrt/files/config
-	echo -n "ptp-builder revision: " > openwrt/files/build
-	git rev-parse HEAD >> openwrt/files/build
-	echo -n "openwrt revision: " >> openwrt/files/build
-	(cd openwrt; git rev-parse HEAD) >> openwrt/files/build
+	git rev-parse HEAD > openwrt/files/ptpwrt-builder.rev
 
 # Perform build
 	(cd openwrt; make)
@@ -87,6 +108,17 @@ net4521: prepare device/net4521.config
 # Copy VirtualBox image to output directory
 # (we're sneaking this into the net4521 target just because we can)
 	cp openwrt/bin/x86/*-combined-ext4.vdi image/ptpwrt-vbox.vdi
+
+net4521-update: prepare-update device/net4521.config
+# Ensure critical parts of openwrt tree are clean before (re)populating them
+	rm -rf openwrt/.config openwrt/.config.old openwrt/bin openwrt/files
+
+# Install build configuration to be updated
+	cp device/net4521.config openwrt/.config
+
+# Update build configuration and store the result
+	(cd openwrt; make $(UPDATE_TARGET))
+	cp openwrt/.config device/net4521.config
 
 wgt634u: prepare device/wgt634u.config
 # Ensure critical parts of openwrt tree are clean before (re)populating them
@@ -100,13 +132,22 @@ wgt634u: prepare device/wgt634u.config
 
 # Tag build with configuration and revision information
 	cp device/wgt634u.config openwrt/files/config
-	echo -n "ptp-builder revision: " > openwrt/files/build
-	git rev-parse HEAD >> openwrt/files/build
-	echo -n "openwrt revision: " >> openwrt/files/build
-	(cd openwrt; git rev-parse HEAD) >> openwrt/files/build
+	git rev-parse HEAD > openwrt/files/ptpwrt-builder.rev
 
 # Perform build
 	(cd openwrt; make)
 
 # Copy completed image to output directory
 	cp openwrt/bin/brcm47xx/*-brcm47xx-squashfs.trx image/ptpwrt-wgt634u.trx
+
+wgt634u-update: prepare-update device/wgt634u.config
+# Ensure critical parts of openwrt tree are clean before (re)populating them
+	rm -rf openwrt/.config openwrt/.config.old openwrt/bin openwrt/files
+
+# Install build configuration to be updated
+	cp device/wgt634u.config openwrt/.config
+
+# Update build configuration and store the result
+	(cd openwrt; make $(UPDATE_TARGET))
+	cp openwrt/.config device/wgt634u.config
+

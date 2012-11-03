@@ -1,7 +1,3 @@
-ifndef UPDATE_TARGET
-    UPDATE_TARGET := 'oldconfig'
-endif
-
 .PHONY: default clean prepare all mr3201a net4521 wgt634u
 
 default: all
@@ -49,13 +45,13 @@ prepare:
 	cp rev-openwrt rev-packages rev-ptpwrt openwrt/files/
 
 prepare-update: prepare
-	(cd openwrt; git checkout master)
+	(cd openwrt; git pull origin master; git checkout master)
 	(cd openwrt; git rev-parse HEAD > ../rev-openwrt)
 
-	(cd openwrt/feeds/packages; git checkout master)
+	(cd openwrt/feeds/packages; git pull origin master; git checkout master)
 	(cd openwrt/feeds/packages; git rev-parse HEAD > ../../../rev-packages)
 
-	(cd openwrt/feeds/ptpwrt; git checkout master)
+	(cd openwrt/feeds/ptpwrt; git pull origin master; git checkout master)
 	(cd openwrt/feeds/ptpwrt; git rev-parse HEAD > ../../../rev-ptpwrt)
 
 	cp rev-openwrt rev-packages rev-ptpwrt openwrt/files/
@@ -86,7 +82,7 @@ mr3201a-update: prepare-update device/mr3201a.config
 	cp device/mr3201a.config openwrt/.config
 
 # Update build configuration and store the result
-	(cd openwrt; make $(UPDATE_TARGET))
+	(cd openwrt; make defconfig)
 	cp openwrt/.config device/mr3201a.config
 
 net4521: prepare device/net4521.config
@@ -111,7 +107,7 @@ net4521-update: prepare-update device/net4521.config
 	cp device/net4521.config openwrt/.config
 
 # Update build configuration and store the result
-	(cd openwrt; make $(UPDATE_TARGET))
+	(cd openwrt; make defconfig)
 	cp openwrt/.config device/net4521.config
 
 wgt634u: prepare device/wgt634u.config
@@ -132,6 +128,6 @@ wgt634u-update: prepare-update device/wgt634u.config
 	cp device/wgt634u.config openwrt/.config
 
 # Update build configuration and store the result
-	(cd openwrt; make $(UPDATE_TARGET))
+	(cd openwrt; make defconfig)
 	cp openwrt/.config device/wgt634u.config
 

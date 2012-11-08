@@ -50,13 +50,13 @@ prepare:
 	cp rev-openwrt rev-packages rev-ptpwrt openwrt/files/
 
 prepare-update: prepare
-	(cd openwrt; git pull origin master; git checkout master)
+	(cd openwrt; git checkout master; git pull origin master)
 	(cd openwrt; git rev-parse HEAD > ../rev-openwrt)
 
-	(cd openwrt/feeds/packages; git pull origin master; git checkout master)
+	(cd openwrt/feeds/packages; git checkout master; git pull origin master)
 	(cd openwrt/feeds/packages; git rev-parse HEAD > ../../../rev-packages)
 
-	(cd openwrt/feeds/ptpwrt; git pull origin master; git checkout master)
+	(cd openwrt/feeds/ptpwrt; git checkout master; git pull origin master)
 	(cd openwrt/feeds/ptpwrt; git rev-parse HEAD > ../../../rev-ptpwrt)
 
 	cp rev-openwrt rev-packages rev-ptpwrt openwrt/files/

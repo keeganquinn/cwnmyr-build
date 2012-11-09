@@ -72,9 +72,10 @@ all: $(DEVICES)
 alix2: prepare device/alix2.config
 	@# Install device build and runtime configuration into openwrt tree
 	cp device/alix2.config openwrt/.config
-	cp device/alix2.config openwrt/files/config
+	cp device/alix2.config openwrt/files/config-template
 	cp openwrt/files/etc/config/network.ok openwrt/files/etc/config/network
 	(cd openwrt; make defconfig)
+	cp openwrt/.config openwrt/files/config-final
 
 	@# Perform build
 	(cd openwrt; make)
@@ -85,9 +86,10 @@ alix2: prepare device/alix2.config
 atheros: prepare device/atheros.config
 	@# Install device build and runtime configuration into openwrt tree
 	cp device/atheros.config openwrt/.config
-	cp device/atheros.config openwrt/files/config
+	cp device/atheros.config openwrt/files/config-template
 	cp openwrt/files/etc/config/network.ok openwrt/files/etc/config/network
 	(cd openwrt; make defconfig)
+	cp openwrt/.config openwrt/files/config-final
 
 	@# Perform build
 	(cd openwrt; make)
@@ -98,9 +100,10 @@ atheros: prepare device/atheros.config
 net45xx: prepare device/net45xx.config
 	@# Install device build and runtime configuration into openwrt tree
 	cp device/net45xx.config openwrt/.config
-	cp device/net45xx.config openwrt/files/config
+	cp device/net45xx.config openwrt/files/config-template
 	cp openwrt/files/etc/config/network.ok openwrt/files/etc/config/network
 	(cd openwrt; make defconfig)
+	cp openwrt/.config openwrt/files/config-final
 
 	@# Perform build
 	(cd openwrt; make)
@@ -115,9 +118,10 @@ net45xx: prepare device/net45xx.config
 wgt634u: prepare device/wgt634u.config
 	@# Install device build and runtime configuration into openwrt tree
 	cp device/wgt634u.config openwrt/.config
-	cp device/wgt634u.config openwrt/files/config
+	cp device/wgt634u.config openwrt/files/config-template
 	cp openwrt/files/etc/config/network.sw openwrt/files/etc/config/network
 	(cd openwrt; make defconfig)
+	cp openwrt/.config openwrt/files/config-final
 
 	@# Perform build
 	(cd openwrt; make)

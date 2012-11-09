@@ -1,7 +1,9 @@
 # Makefile: OpenWrt image generator for PTP nodes
 # Copyright 2012 Personal Telco Project
 
-.PHONY: default clean distclean prepare update all mr3201a net4521 wgt634u
+DEVICES := alix2 atheros net45xx wgt634u
+
+.PHONY: default clean distclean prepare update all $(DEVICES)
 
 default: all
 
@@ -65,12 +67,12 @@ update: prepare
 	openwrt/scripts/feeds update -i
 	openwrt/scripts/feeds install -a
 
-all: mr3201a net4521 wgt634u
+all: $(DEVICES)
 
-mr3201a: prepare device/mr3201a.config
+alix2: prepare device/alix2.config
 	@# Install device build and runtime configuration into openwrt tree
-	cp device/mr3201a.config openwrt/.config
-	cp device/mr3201a.config openwrt/files/config
+	cp device/alix2.config openwrt/.config
+	cp device/alix2.config openwrt/files/config
 	cp openwrt/files/etc/config/network.ok openwrt/files/etc/config/network
 	(cd openwrt; make defconfig)
 
@@ -78,12 +80,12 @@ mr3201a: prepare device/mr3201a.config
 	(cd openwrt; make)
 
 	@# Copy completed image to output directory
-	cp openwrt/bin/atheros/*-combined.squashfs.img image/ptpwrt-mr3201a.img
+	cp openwrt/bin/x86/*-combined-squashfs.img image/ptpwrt-alix2.img
 
-net4521: prepare device/net4521.config
+atheros: prepare device/atheros.config
 	@# Install device build and runtime configuration into openwrt tree
-	cp device/net4521.config openwrt/.config
-	cp device/net4521.config openwrt/files/config
+	cp device/atheros.config openwrt/.config
+	cp device/atheros.config openwrt/files/config
 	cp openwrt/files/etc/config/network.ok openwrt/files/etc/config/network
 	(cd openwrt; make defconfig)
 
@@ -91,10 +93,23 @@ net4521: prepare device/net4521.config
 	(cd openwrt; make)
 
 	@# Copy completed image to output directory
-	cp openwrt/bin/x86/*-combined-squashfs.img image/ptpwrt-net4521.img
+	cp openwrt/bin/atheros/*-combined.squashfs.img image/ptpwrt-atheros.img
+
+net45xx: prepare device/net45xx.config
+	@# Install device build and runtime configuration into openwrt tree
+	cp device/net45xx.config openwrt/.config
+	cp device/net45xx.config openwrt/files/config
+	cp openwrt/files/etc/config/network.ok openwrt/files/etc/config/network
+	(cd openwrt; make defconfig)
+
+	@# Perform build
+	(cd openwrt; make)
+
+	@# Copy completed image to output directory
+	cp openwrt/bin/x86/*-combined-squashfs.img image/ptpwrt-net45xx.img
 
 	@# Copy VirtualBox image to output directory
-	@# (we are sneaking this into the net4521 target just because we can)
+	@# (we are sneaking this into the net45xx target just because we can)
 	cp openwrt/bin/x86/*-combined-ext4.vdi image/ptpwrt-vbox.vdi
 
 wgt634u: prepare device/wgt634u.config

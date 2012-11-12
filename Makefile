@@ -81,7 +81,8 @@ alix2: prepare device/alix2.config
 	(cd openwrt; make)
 
 	@# Copy completed image to output directory
-	cp openwrt/bin/x86/*-combined-squashfs.img image/ptpwrt-alix2.img
+	cp openwrt/bin/x86/openwrt-x86-alix2-combined-squashfs.img \
+		image/ptpwrt-alix2.img
 
 atheros: prepare device/atheros.config
 	@# Install device build and runtime configuration into openwrt tree
@@ -109,7 +110,8 @@ net45xx: prepare device/net45xx.config
 	(cd openwrt; make)
 
 	@# Copy completed image to output directory
-	cp openwrt/bin/x86/*-combined-squashfs.img image/ptpwrt-net45xx.img
+	cp openwrt/bin/x86/openwrt-x86-generic-combined-squashfs.img \
+		image/ptpwrt-net45xx.img
 
 	@# Copy VirtualBox image to output directory
 	@# (we are sneaking this into the net45xx target just because we can)

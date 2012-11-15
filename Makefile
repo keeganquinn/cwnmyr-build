@@ -1,9 +1,7 @@
 # Makefile: OpenWrt image generator for PTP nodes
 # Copyright 2012 Personal Telco Project
 
-DEVICES := alix2 atheros net45xx wgt634u
-
-.PHONY: default clean distclean prepare update all $(DEVICES)
+.PHONY: default clean prepare all mr3201a net4521 wgt634u
 
 default: all
 
@@ -51,7 +49,7 @@ prepare:
 	git rev-parse HEAD > openwrt/files/rev-builder
 	cp rev-openwrt rev-packages rev-ptpwrt openwrt/files/
 
-update: prepare
+prepare-update: prepare
 	(cd openwrt; git checkout master; git pull origin master)
 	(cd openwrt; git rev-parse HEAD > ../rev-openwrt)
 
@@ -67,67 +65,74 @@ update: prepare
 	openwrt/scripts/feeds update -i
 	openwrt/scripts/feeds install -a
 
-all: $(DEVICES)
+all: mr3201a net4521 wgt634u
 
-alix2: prepare device/alix2.config
+update: mr3201a-update net4521-update wgt634u-update
+
+mr3201a: prepare device/mr3201a.config
 	@# Install device build and runtime configuration into openwrt tree
-	cp device/alix2.config openwrt/.config
-	cp device/alix2.config openwrt/files/config-template
+	cp device/mr3201a.config openwrt/.config
+	cp device/mr3201a.config openwrt/files/config
 	cp openwrt/files/etc/config/network.ok openwrt/files/etc/config/network
-	(cd openwrt; make defconfig)
-	cp openwrt/.config openwrt/files/config-final
+	(cd openwrt; make oldconfig)
 
 	@# Perform build
 	(cd openwrt; make)
 
 	@# Copy completed image to output directory
-	cp openwrt/bin/x86/openwrt-x86-alix2-combined-squashfs.img \
-		image/ptpwrt-alix2.img
+	cp openwrt/bin/atheros/*-combined.squashfs.img image/ptpwrt-mr3201a.img
 
-atheros: prepare device/atheros.config
-	@# Install device build and runtime configuration into openwrt tree
-	cp device/atheros.config openwrt/.config
-	cp device/atheros.config openwrt/files/config-template
-	cp openwrt/files/etc/config/network.ok openwrt/files/etc/config/network
+mr3201a-update: prepare-update device/mr3201a.config
+	@# Install build configuration to be updated
+	cp device/mr3201a.config openwrt/.config
+
+	@# Update build configuration and store the result
 	(cd openwrt; make defconfig)
-	cp openwrt/.config openwrt/files/config-final
+	cp openwrt/.config device/mr3201a.config
+
+net4521: prepare device/net4521.config
+	@# Install device build and runtime configuration into openwrt tree
+	cp device/net4521.config openwrt/.config
+	cp device/net4521.config openwrt/files/config
+	cp openwrt/files/etc/config/network.ok openwrt/files/etc/config/network
+	(cd openwrt; make oldconfig)
 
 	@# Perform build
 	(cd openwrt; make)
 
 	@# Copy completed image to output directory
-	cp openwrt/bin/atheros/*-combined.squashfs.img image/ptpwrt-atheros.img
-
-net45xx: prepare device/net45xx.config
-	@# Install device build and runtime configuration into openwrt tree
-	cp device/net45xx.config openwrt/.config
-	cp device/net45xx.config openwrt/files/config-template
-	cp openwrt/files/etc/config/network.ok openwrt/files/etc/config/network
-	(cd openwrt; make defconfig)
-	cp openwrt/.config openwrt/files/config-final
-
-	@# Perform build
-	(cd openwrt; make)
-
-	@# Copy completed image to output directory
-	cp openwrt/bin/x86/openwrt-x86-generic-combined-squashfs.img \
-		image/ptpwrt-net45xx.img
+	cp openwrt/bin/x86/*-combined-squashfs.img image/ptpwrt-net4521.img
 
 	@# Copy VirtualBox image to output directory
-	@# (we are sneaking this into the net45xx target just because we can)
+	@# (we are sneaking this into the net4521 target just because we can)
 	cp openwrt/bin/x86/*-combined-ext4.vdi image/ptpwrt-vbox.vdi
+
+net4521-update: prepare-update device/net4521.config
+	@# Install build configuration to be updated
+	cp device/net4521.config openwrt/.config
+
+	@# Update build configuration and store the result
+	(cd openwrt; make defconfig)
+	cp openwrt/.config device/net4521.config
 
 wgt634u: prepare device/wgt634u.config
 	@# Install device build and runtime configuration into openwrt tree
 	cp device/wgt634u.config openwrt/.config
-	cp device/wgt634u.config openwrt/files/config-template
+	cp device/wgt634u.config openwrt/files/config
 	cp openwrt/files/etc/config/network.sw openwrt/files/etc/config/network
-	(cd openwrt; make defconfig)
-	cp openwrt/.config openwrt/files/config-final
+	(cd openwrt; make oldconfig)
 
 	@# Perform build
 	(cd openwrt; make)
 
 	@# Copy completed image to output directory
 	cp openwrt/bin/brcm47xx/*-brcm47xx-squashfs.trx image/ptpwrt-wgt634u.trx
+
+wgt634u-update: prepare-update device/wgt634u.config
+	@# Install build configuration to be updated
+	cp device/wgt634u.config openwrt/.config
+
+	@# Update build configuration and store the result
+	(cd openwrt; make defconfig)
+	cp openwrt/.config device/wgt634u.config
 

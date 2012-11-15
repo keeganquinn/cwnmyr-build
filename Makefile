@@ -20,6 +20,11 @@ prepare:
 		git clone git://nbd.name/openwrt.git openwrt
 	(cd openwrt; git checkout `cat ../rev-openwrt`)
 
+	@# Symlink dl subdirectory, to avoid unneeded redownloading
+	mkdir -p dl
+	rm -rf openwrt/dl
+	ln -s openwrt/dl dl
+
 	@# Make sure we have the right feeds trees. openwrt/scripts/feeds does
 	@# not support retrieving a specific git revision, so we have to do
 	@# this ourselves.

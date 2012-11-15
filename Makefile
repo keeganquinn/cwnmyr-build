@@ -1,6 +1,8 @@
 # Makefile: OpenWrt image generator for PTP nodes
 # Copyright 2012 Personal Telco Project
 
+UPDATE_TARGET ?= 'oldconfig'
+
 .PHONY: default clean prepare all mr3201a net4521 wgt634u
 
 default: all
@@ -70,11 +72,13 @@ all: mr3201a net4521 wgt634u
 update: mr3201a-update net4521-update wgt634u-update
 
 mr3201a: prepare device/mr3201a.config
-	@# Install device build and runtime configuration into openwrt tree
+	@# Install and activate device-specific OpenWrt build configuration
 	cp device/mr3201a.config openwrt/.config
-	cp device/mr3201a.config openwrt/files/config
-	cp openwrt/files/etc/config/network.ok openwrt/files/etc/config/network
 	(cd openwrt; make oldconfig)
+
+	@# Install device-specific runtime configuration
+	cp openwrt/.config openwrt/files/config
+	cp openwrt/files/etc/config/network.ok openwrt/files/etc/config/network
 
 	@# Perform build
 	(cd openwrt; make)
@@ -87,15 +91,17 @@ mr3201a-update: prepare-update device/mr3201a.config
 	cp device/mr3201a.config openwrt/.config
 
 	@# Update build configuration and store the result
-	(cd openwrt; make defconfig)
+	(cd openwrt; make $(UPDATE_TARGET))
 	cp openwrt/.config device/mr3201a.config
 
 net4521: prepare device/net4521.config
-	@# Install device build and runtime configuration into openwrt tree
+	@# Install and activate device-specific OpenWrt build configuration
 	cp device/net4521.config openwrt/.config
-	cp device/net4521.config openwrt/files/config
-	cp openwrt/files/etc/config/network.ok openwrt/files/etc/config/network
 	(cd openwrt; make oldconfig)
+
+	@# Install device-specific runtime configuration
+	cp openwrt/.config openwrt/files/config
+	cp openwrt/files/etc/config/network.ok openwrt/files/etc/config/network
 
 	@# Perform build
 	(cd openwrt; make)
@@ -112,15 +118,17 @@ net4521-update: prepare-update device/net4521.config
 	cp device/net4521.config openwrt/.config
 
 	@# Update build configuration and store the result
-	(cd openwrt; make defconfig)
+	(cd openwrt; make $(UPDATE_TARGET))
 	cp openwrt/.config device/net4521.config
 
 wgt634u: prepare device/wgt634u.config
-	@# Install device build and runtime configuration into openwrt tree
+	@# Install and activate device-specific OpenWrt build configuration
 	cp device/wgt634u.config openwrt/.config
-	cp device/wgt634u.config openwrt/files/config
-	cp openwrt/files/etc/config/network.sw openwrt/files/etc/config/network
 	(cd openwrt; make oldconfig)
+
+	@# Install device-specific runtime configuration
+	cp openwrt/.config openwrt/files/config
+	cp openwrt/files/etc/config/network.sw openwrt/files/etc/config/network
 
 	@# Perform build
 	(cd openwrt; make)
@@ -133,6 +141,6 @@ wgt634u-update: prepare-update device/wgt634u.config
 	cp device/wgt634u.config openwrt/.config
 
 	@# Update build configuration and store the result
-	(cd openwrt; make defconfig)
+	(cd openwrt; make $(UPDATE_TARGET))
 	cp openwrt/.config device/wgt634u.config
 

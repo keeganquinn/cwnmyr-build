@@ -31,8 +31,9 @@ to create one:
 Use the menu system to select the correct options for your hardware platform.
 Be sure to select the Personal Telco Node metapackage, as well as the correct
 hardware options. When you're done, there should be a `.config` file in the
-working directory. Send it to `keeganquinn@gmail.com` with a description of
-the new target platform to have it included in the distribution.
+working directory. Send it to `keeganquinn@gmail.com`, or open an issue or pull
+request on the github page for this project with a description of the new
+target platform to have it included in the distribution.
 
 Usage
 -----

@@ -1,0 +1,5 @@
+#!/bin/sh
+
+cp openwrt/bin/atheros/*-combined.squashfs.img image/ptpwrt-atheros.img
+
+exit 0

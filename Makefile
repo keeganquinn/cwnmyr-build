@@ -1,9 +1,9 @@
 # Makefile: OpenWrt image generator for PTP nodes
 # Copyright 2012 Personal Telco Project
 
-UPDATE_TARGET ?= 'oldconfig'
+devices := $(notdir $(wildcard device/*))
 
-.PHONY: default clean prepare all mr3201a net4521 wgt634u
+.PHONY: default clean prepare all $(devices)
 
 default: all
 
@@ -23,7 +23,7 @@ prepare:
 	@# Symlink dl subdirectory, to avoid unneeded redownloading
 	mkdir -p dl
 	rm -rf openwrt/dl
-	ln -s openwrt/dl dl
+	ln -s ../dl openwrt/dl
 
 	@# Make sure we have the right feeds trees. openwrt/scripts/feeds does
 	@# not support retrieving a specific git revision, so we have to do
@@ -56,7 +56,7 @@ prepare:
 	git rev-parse HEAD > openwrt/files/rev-builder
 	cp rev-openwrt rev-packages rev-ptpwrt openwrt/files/
 
-prepare-update: prepare
+update: prepare
 	(cd openwrt; git checkout master; git pull origin master)
 	(cd openwrt; git rev-parse HEAD > ../rev-openwrt)
 
@@ -68,84 +68,23 @@ prepare-update: prepare
 
 	cp rev-openwrt rev-packages rev-ptpwrt openwrt/files/
 
-	@# Update the package index and install all packages, again
+	@# Update the package index and install all packages, again, to be safe
 	openwrt/scripts/feeds update -i
 	openwrt/scripts/feeds install -a
 
-all: mr3201a net4521 wgt634u
+all: $(devices)
 
-update: mr3201a-update net4521-update wgt634u-update
-
-mr3201a: prepare device/mr3201a.config
+define build
+$(1): prepare device/$(1)/config
 	@# Install and activate device-specific OpenWrt build configuration
-	cp device/mr3201a.config openwrt/.config
-	(cd openwrt; make oldconfig)
-
-	@# Install device-specific runtime configuration
+	cp device/$(1)/config openwrt/.config
+	(cd openwrt; make defconfig)
 	cp openwrt/.config openwrt/files/config
-	cp openwrt/files/etc/config/network.ok openwrt/files/etc/config/network
 
-	@# Perform build
+	@# Perform build, triggering hook scripts as needed
+	[ -x device/$(1)/prebuild ] && device/$(1)/prebuild
 	(cd openwrt; make)
+	[ -x device/$(1)/postbuild ] && device/$(1)/postbuild
+endef   
 
-	@# Copy completed image to output directory
-	cp openwrt/bin/atheros/*-combined.squashfs.img image/ptpwrt-mr3201a.img
-
-mr3201a-update: prepare-update device/mr3201a.config
-	@# Install build configuration to be updated
-	cp device/mr3201a.config openwrt/.config
-
-	@# Update build configuration and store the result
-	(cd openwrt; make $(UPDATE_TARGET))
-	cp openwrt/.config device/mr3201a.config
-
-net4521: prepare device/net4521.config
-	@# Install and activate device-specific OpenWrt build configuration
-	cp device/net4521.config openwrt/.config
-	(cd openwrt; make oldconfig)
-
-	@# Install device-specific runtime configuration
-	cp openwrt/.config openwrt/files/config
-	cp openwrt/files/etc/config/network.ok openwrt/files/etc/config/network
-
-	@# Perform build
-	(cd openwrt; make)
-
-	@# Copy completed image to output directory
-	cp openwrt/bin/x86/*-combined-squashfs.img image/ptpwrt-net4521.img
-
-	@# Copy VirtualBox image to output directory
-	@# (we are sneaking this into the net4521 target just because we can)
-	cp openwrt/bin/x86/*-combined-ext4.vdi image/ptpwrt-vbox.vdi
-
-net4521-update: prepare-update device/net4521.config
-	@# Install build configuration to be updated
-	cp device/net4521.config openwrt/.config
-
-	@# Update build configuration and store the result
-	(cd openwrt; make $(UPDATE_TARGET))
-	cp openwrt/.config device/net4521.config
-
-wgt634u: prepare device/wgt634u.config
-	@# Install and activate device-specific OpenWrt build configuration
-	cp device/wgt634u.config openwrt/.config
-	(cd openwrt; make oldconfig)
-
-	@# Install device-specific runtime configuration
-	cp openwrt/.config openwrt/files/config
-	cp openwrt/files/etc/config/network.sw openwrt/files/etc/config/network
-
-	@# Perform build
-	(cd openwrt; make)
-
-	@# Copy completed image to output directory
-	cp openwrt/bin/brcm47xx/*-brcm47xx-squashfs.trx image/ptpwrt-wgt634u.trx
-
-wgt634u-update: prepare-update device/wgt634u.config
-	@# Install build configuration to be updated
-	cp device/wgt634u.config openwrt/.config
-
-	@# Update build configuration and store the result
-	(cd openwrt; make $(UPDATE_TARGET))
-	cp openwrt/.config device/wgt634u.config
-
+$(foreach device, $(devices), $(eval $(call build,$(device))))

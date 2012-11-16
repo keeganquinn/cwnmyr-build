@@ -1,0 +1,5 @@
+#!/bin/sh
+
+cp openwrt/bin/brcm47xx/*-brcm47xx-squashfs.trx image/ptpwrt-wgt634u.trx
+
+exit 0

@@ -1,0 +1,5 @@
+#!/bin/sh
+
+cp openwrt/files/etc/config/network.sw openwrt/files/etc/config/network
+
+exit 0

@@ -1,6 +1,10 @@
 #!/bin/sh
 
-cp openwrt/bin/x86/*-generic-combined-squashfs.img image/ptpwrt-net45xx.img
-cp openwrt/bin/x86/*-combined-ext4.vdi image/ptpwrt-vbox.vdi
+LEDE=$1
+
+set -e -x
+
+cp "${LEDE}"/bin/x86/*-generic-combined-squashfs.img image/ptpwrt-net45xx.img
+cp "${LEDE}"/bin/x86/*-combined-ext4.vdi image/ptpwrt-vbox.vdi
 
 exit 0

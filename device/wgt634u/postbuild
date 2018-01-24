@@ -1,5 +1,9 @@
 #!/bin/sh
 
-cp openwrt/bin/brcm47xx/*-brcm47xx-squashfs.trx image/ptpwrt-wgt634u.trx
+LEDE=$1
+
+set -e -x
+
+cp "${LEDE}"/bin/brcm47xx/*-brcm47xx-squashfs.trx image/ptpwrt-wgt634u.trx
 
 exit 0

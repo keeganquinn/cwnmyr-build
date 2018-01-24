@@ -1,5 +1,9 @@
 #!/bin/sh
 
-cp openwrt/bin/x86/*-alix2-combined-squashfs.img image/ptpwrt-alix2.img
+LEDE=$1
+
+set -e -x
+
+cp "${LEDE}"/bin/x86/*-alix2-combined-squashfs.img image/ptpwrt-alix2.img
 
 exit 0

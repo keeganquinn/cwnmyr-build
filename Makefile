@@ -1,7 +1,9 @@
-# Makefile: OpenWrt image generator for PTP nodes
-# Copyright 2012 Personal Telco Project
+# Makefile: LEDE image generator for PTP nodes
 
 devices := $(notdir $(wildcard device/*))
+
+BUILDER := $(shell dirname "$(realpath $(lastword $(MAKEFILE_LIST)))")
+LEDE ?= lede
 
 .PHONY: default clean prepare all $(devices)
 
@@ -11,80 +13,86 @@ clean:
 	rm -rf image
 
 distclean: clean
-	rm -rf openwrt
+	rm -rf "$(LEDE)"
 
-prepare:
-	@# Make sure we have the correct openwrt tree
-	[ -d openwrt ] && \
-		(cd openwrt; git fetch origin) || \
-		git clone git://nbd.name/openwrt.git openwrt
-	(cd openwrt; git checkout `cat ../rev-openwrt`)
+fetch:
+	@# Make sure we have the correct LEDE tree
+	[ -d "$(LEDE)" ] && \
+		(cd "$(LEDE)"; git fetch -q origin) || \
+		git clone -q git://git.lede-project.org/source.git "$(LEDE)"
+	(cd "$(LEDE)"; git checkout -q `cat "$(BUILDER)/rev-lede"`)
 
 	@# Symlink dl subdirectory, to avoid unneeded redownloading
 	mkdir -p dl
-	rm -rf openwrt/dl
-	ln -s ../dl openwrt/dl
+	rm -rf "$(LEDE)/dl"
+	ln -s "$(BUILDER)/dl" "$(LEDE)/dl"
 
-	@# Make sure we have the right feeds trees. openwrt/scripts/feeds does
+	mkdir -p "$(LEDE)/feeds"
+	cp feeds.conf "$(LEDE)/feeds.conf"
+
+prepare: fetch
+	@# Make sure we have the right feeds trees. lede/scripts/feeds does
 	@# not support retrieving a specific git revision, so we have to do
 	@# this ourselves.
-	mkdir -p openwrt/feeds
-	[ -d openwrt/feeds/packages ] && \
-		(cd openwrt/feeds/packages; git fetch origin) || \
-		git clone git://nbd.name/packages.git openwrt/feeds/packages
-	(cd openwrt/feeds/packages; git checkout `cat ../../../rev-packages`)
-	[ -d openwrt/feeds/ptpwrt ] && \
-		(cd openwrt/feeds/ptpwrt; git fetch origin) || \
-		git clone git://github.com/keeganquinn/ptpwrt-packages.git \
-			openwrt/feeds/ptpwrt
-	(cd openwrt/feeds/ptpwrt; git checkout `cat ../../../rev-ptpwrt`)
+	cat feeds.conf | while read line; do \
+		feed=`echo $$line | cut -f2 -d' ' -`; \
+		url=`echo $$line | cut -f3 -d' ' -`; \
+		[ -d "$(LEDE)/feeds/$$feed" ] && \
+			(cd "$(LEDE)/feeds/$$feed"; git fetch -q origin) || \
+			git clone -q $$url "$(LEDE)/feeds/$$feed"; \
+		(cd "$(LEDE)/feeds/$$feed"; \
+			git checkout -q `cat "$(BUILDER)/rev-$$feed"`); \
+	done
 
 	@# Update the package index and install all packages
-	cp feeds.conf openwrt/feeds.conf
-	openwrt/scripts/feeds update -i
-	openwrt/scripts/feeds install -a
+	"$(LEDE)/scripts/feeds" update -i
+	"$(LEDE)/scripts/feeds" install -a
 
-	@# Ensure critical parts of openwrt tree are clean before
+	@# Ensure critical parts of the LEDE tree are clean before
 	@# (re)populating them
-	rm -rf openwrt/.config openwrt/.config.old openwrt/bin openwrt/files
+	rm -rf "$(LEDE)/.config*" "$(LEDE)/bin" "$(LEDE)/files"
 
 	@# Create output directory for images
 	mkdir -p image
 
 	@# Populate files tree
-	cp -r files openwrt/files
-	git rev-parse HEAD > openwrt/files/rev-builder
-	cp rev-openwrt rev-packages rev-ptpwrt openwrt/files/
+	cp -r files "$(LEDE)/files"
+	git rev-parse HEAD > "$(LEDE)/files/rev-builder"
+	cp rev-* "$(LEDE)/files/"
 
-update: prepare
-	(cd openwrt; git checkout master; git pull origin master)
-	(cd openwrt; git rev-parse HEAD > ../rev-openwrt)
+update: fetch
+	(cd "$(LEDE)"; git checkout -q master; git pull -q origin master)
+	(cd "$(LEDE)"; git rev-parse HEAD > "$(BUILDER)/rev-lede")
 
-	(cd openwrt/feeds/packages; git checkout master; git pull origin master)
-	(cd openwrt/feeds/packages; git rev-parse HEAD > ../../../rev-packages)
+	"$(LEDE)/scripts/feeds" update -a
+	cat feeds.conf | while read line; do \
+		feed=`echo $$line | cut -f2 -d' ' -`; \
+		(cd "$(LEDE)/feeds/$$feed"; \
+			git checkout -q master; git pull -q origin master); \
+		(cd "$(LEDE)/feeds/$$feed"; \
+			git rev-parse HEAD > "$(BUILDER)/rev-$$feed"); \
+	done
 
-	(cd openwrt/feeds/ptpwrt; git checkout master; git pull origin master)
-	(cd openwrt/feeds/ptpwrt; git rev-parse HEAD > ../../../rev-ptpwrt)
-
-	cp rev-openwrt rev-packages rev-ptpwrt openwrt/files/
-
-	@# Update the package index and install all packages, again, to be safe
-	openwrt/scripts/feeds update -i
-	openwrt/scripts/feeds install -a
+	@# Update the package index and install all packages
+	"$(LEDE)/scripts/feeds" update -i
+	"$(LEDE)/scripts/feeds" install -a
 
 all: $(devices)
 
 define build
 $(1): prepare device/$(1)/config
-	@# Install and activate device-specific OpenWrt build configuration
-	cp device/$(1)/config openwrt/.config
-	(cd openwrt; make defconfig)
-	cp openwrt/.config openwrt/files/config
+	@# Install and activate device-specific LEDE build configuration
+	cp "device/$(1)/config" "$(LEDE)/.config"
+	(cd "$(LEDE)"; make defconfig)
+	cp "$(LEDE)/.config" "$(LEDE)/files/config"
 
 	@# Perform build, triggering hook scripts as needed
-	[ -x device/$(1)/prebuild ] && device/$(1)/prebuild
-	(cd openwrt; make)
-	[ -x device/$(1)/postbuild ] && device/$(1)/postbuild
-endef   
+	[ -x "device/$(1)/prebuild" ] && \
+		"device/$(1)/prebuild" "$(LEDE)" || true
+	(cd "$(LEDE)"; \
+		make BUILD_LOG=1 FORCE_UNSAFE_CONFIGURE=1 IGNORE_ERRORS=m V=99)
+	[ -x "device/$(1)/postbuild" ] && \
+		"device/$(1)/postbuild" "$(LEDE)" || true
+endef
 
 $(foreach device, $(devices), $(eval $(call build,$(device))))

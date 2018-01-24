@@ -1,5 +1,9 @@
 #!/bin/sh
 
-cp openwrt/bin/atheros/*-combined.squashfs.img image/ptpwrt-atheros.img
+LEDE=$1
+
+set -e -x
+
+cp "${LEDE}"/bin/atheros/*-combined.squashfs.img image/ptpwrt-atheros.img
 
 exit 0

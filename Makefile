@@ -20,7 +20,7 @@ fetch:
 	[ -d "$(LEDE)" ] && \
 		(cd "$(LEDE)"; git fetch -q origin) || \
 		git clone -q git://git.lede-project.org/source.git "$(LEDE)"
-	(cd "$(LEDE)"; git checkout -q `cat "$(BUILDER)/rev-lede"`)
+	(cd "$(LEDE)"; git checkout -q `cat "$(BUILDER)/rev/lede"`)
 
 	@# Symlink dl subdirectory, to avoid unneeded redownloading
 	mkdir -p dl
@@ -41,7 +41,7 @@ prepare: fetch
 			(cd "$(LEDE)/feeds/$$feed"; git fetch -q origin) || \
 			git clone -q $$url "$(LEDE)/feeds/$$feed"; \
 		(cd "$(LEDE)/feeds/$$feed"; \
-			git checkout -q `cat "$(BUILDER)/rev-$$feed"`); \
+			git checkout -q `cat "$(BUILDER)/rev/$$feed"`); \
 	done
 
 	@# Update the package index and install all packages
@@ -57,12 +57,13 @@ prepare: fetch
 
 	@# Populate files tree
 	cp -r files "$(LEDE)/files"
-	git rev-parse HEAD > "$(LEDE)/files/rev-builder"
-	cp rev-* "$(LEDE)/files/"
+	git rev-parse HEAD > "$(LEDE)/files/rev/builder"
+	mkdir -p "$(LEDE)/files/rev"
+	cp rev/* "$(LEDE)/files/rev/"
 
 update: fetch
 	(cd "$(LEDE)"; git checkout -q master; git pull -q origin master)
-	(cd "$(LEDE)"; git rev-parse HEAD > "$(BUILDER)/rev-lede")
+	(cd "$(LEDE)"; git rev-parse HEAD > "$(BUILDER)/rev/lede")
 
 	"$(LEDE)/scripts/feeds" update -a
 	cat feeds.conf | while read line; do \
@@ -70,7 +71,7 @@ update: fetch
 		(cd "$(LEDE)/feeds/$$feed"; \
 			git checkout -q master; git pull -q origin master); \
 		(cd "$(LEDE)/feeds/$$feed"; \
-			git rev-parse HEAD > "$(BUILDER)/rev-$$feed"); \
+			git rev-parse HEAD > "$(BUILDER)/rev/$$feed"); \
 	done
 
 	@# Update the package index and install all packages

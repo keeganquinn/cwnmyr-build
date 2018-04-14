@@ -57,15 +57,15 @@ prepare: fetch
 
 	@# Populate files tree
 	cp -r files "$(LEDE)/files"
-	git rev-parse HEAD > "$(LEDE)/files/rev/builder"
 	mkdir -p "$(LEDE)/files/rev"
+	git rev-parse HEAD > "$(LEDE)/files/rev/builder"
 	cp rev/* "$(LEDE)/files/rev/"
 
 update: fetch
 	(cd "$(LEDE)"; git checkout -q master; git pull -q origin master)
 	(cd "$(LEDE)"; git rev-parse HEAD > "$(BUILDER)/rev/lede")
 
-	"$(LEDE)/scripts/feeds" update -a
+	"$(LEDE)/scripts/feeds" update -i
 	cat feeds.conf | while read line; do \
 		feed=`echo $$line | cut -f2 -d' ' -`; \
 		(cd "$(LEDE)/feeds/$$feed"; \

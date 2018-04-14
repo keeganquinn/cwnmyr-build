@@ -15,6 +15,15 @@ For more information about LEDE, visit: https://lede-project.org/
 Device Support
 --------------
 
+This build kit is designed to work in conjunction with existing software;
+finished node images contain code which is integrated from literally hundreds
+of projects, written by thousands of developers. Any and all hardware-specific
+capabilities and limitations are inherited from the sources referenced here.
+
+As the primary basis for this work is LEDE, nearly any target supported by that
+project has the potential to be a Personal Telco node.
+
+
 Currently, three targets are supported: `mr3201a`, `net4521` and `wgt634u`.
 
 All that is needed to add support for additional targets is an appropriate

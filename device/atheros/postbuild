@@ -1,9 +1,0 @@
-#!/bin/sh
-
-LEDE=$1
-
-set -e -x
-
-cp "${LEDE}"/bin/atheros/*-combined.squashfs.img image/ptpwrt-atheros.img
-
-exit 0

@@ -4,7 +4,7 @@ LEDE=$1
 
 set -e -x
 
-cp "${LEDE}"/bin/x86/*-generic-combined-squashfs.img image/ptpwrt-net45xx.img
-cp "${LEDE}"/bin/x86/*-combined-ext4.vdi image/ptpwrt-vbox.vdi
+cp "${LEDE}"/bin/targets/x86/legacy/*-legacy-combined-squashfs.img.gz \
+   image/ptpwrt-net45xx.img.gz
 
 exit 0

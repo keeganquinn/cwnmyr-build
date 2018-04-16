@@ -4,7 +4,7 @@ services:
   main:
     build: .
     volumes:
-      - .:/src/ptpwrt-builder
+      - .:/src/ptpwrt-builder:delegated
       - lede:/src/lede
 
 volumes:

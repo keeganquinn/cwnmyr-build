@@ -4,6 +4,7 @@ LEDE=$1
 
 set -e -x
 
-cp "${LEDE}"/bin/brcm47xx/*-brcm47xx-squashfs.trx image/ptpwrt-wgt634u.trx
+cp "${LEDE}"/bin/targets/brcm47xx/legacy/*-wgt634u-squashfs.bin \
+   image/ptpwrt-wgt634u.bin
 
 exit 0

@@ -27,6 +27,11 @@ fetch:
 	rm -rf "$(LEDE)/dl"
 	ln -s "$(BUILDER)/dl" "$(LEDE)/dl"
 
+	@# Create or link build directory
+	[ -n "$(BUILD)" ] && mkdir -p "$(BUILD)" || true
+	[ -n "$(BUILD)" -a ! -e "$(LEDE)/build_dir" ] && \
+		ln -s "$(BUILD)" "$(LEDE)/build_dir" || true
+
 	mkdir -p "$(LEDE)/feeds"
 	cp feeds.conf "$(LEDE)/feeds.conf"
 
@@ -51,10 +56,6 @@ prepare: fetch
 	@# Ensure critical parts of the LEDE tree are clean before
 	@# (re)populating them
 	rm -rf "$(LEDE)/.config*" "$(LEDE)/bin" "$(LEDE)/files"
-
-	@# Create or link build directory
-	[ -n "$(BUILD)" ] && \
-		mkdir -p "$(BUILD)" && ln -s "$(BUILD)" "$(LEDE)/build_dir"
 
 	@# Create output directory for images
 	mkdir -p image

@@ -6,7 +6,7 @@ RUN apt-get update -qq \
   && apt-get install -y --no-install-recommends \
     build-essential ca-certificates cpanminus file flex gawk gcc-multilib git \
     libncurses5-dev libnet-ssleay-perl libcrypt-ssleay-perl libssl-dev \
-    openssl python rsync subversion unzip wget zlib1g-dev \
+    openssl pkg-config python rsync subversion unzip wget zlib1g-dev \
   && apt-get clean
 
 # Install modules from CPAN

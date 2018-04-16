@@ -1,0 +1,10 @@
+#!/bin/sh
+
+LEDE=$1
+
+set -e -x
+
+cp "${LEDE}"/bin/targets/ramips/mt7621/*-dir-860l-b1-squashfs-factory.bin \
+   image/ptpwrt-dir860l-b1.bin
+
+exit 0

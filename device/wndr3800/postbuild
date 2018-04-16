@@ -1,0 +1,10 @@
+#!/bin/sh
+
+LEDE=$1
+
+set -e -x
+
+cp "${LEDE}"/bin/targets/ar71xx/generic/*-wndr3800-squashfs-factory.img \
+   image/ptpwrt-wndr3800.img
+
+exit 0

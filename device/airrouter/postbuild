@@ -1,0 +1,10 @@
+#!/bin/sh
+
+LEDE=$1
+
+set -e -x
+
+cp "${LEDE}"/bin/targets/ar71xx/generic/*-airrouter-squashfs-factory.bin \
+   image/ptpwrt-airrouter.bin
+
+exit 0

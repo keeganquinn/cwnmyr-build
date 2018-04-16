@@ -1,0 +1,14 @@
+#!/bin/sh
+
+LEDE=$1
+
+set -e -x
+
+cp "${LEDE}"/bin/targets/ar71xx/mikrotik/*-mikrotik-vmlinux-initramfs.elf \
+   image/ptpwrt-mikrotik-initramfs.elf
+cp "${LEDE}"/bin/targets/ar71xx/mikrotik/*-mikrotik-vmlinux-lzma.elf \
+   image/ptpwrt-mikrotik-lzma.elf
+cp "${LEDE}"/bin/targets/ar71xx/mikrotik/*-mikrotik-root.squashfs \
+   image/ptpwrt-mikrotik-root.squashfs
+
+exit 0

@@ -1,0 +1,10 @@
+#!/bin/sh
+
+LEDE=$1
+
+set -e -x
+
+cp "${LEDE}"/bin/targets/apm821xx/nand/*-meraki_mr24-squashfs-sysupgrade.tar \
+   image/ptpwrt-mr24.tar
+
+exit 0

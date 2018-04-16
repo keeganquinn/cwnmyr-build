@@ -52,6 +52,10 @@ prepare: fetch
 	@# (re)populating them
 	rm -rf "$(LEDE)/.config*" "$(LEDE)/bin" "$(LEDE)/files"
 
+	@# Create or link build directory
+	[ -n "$(BUILD)" ] && \
+		mkdir -p "$(BUILD)" && ln -s "$(BUILD)" "$(LEDE)/build_dir"
+
 	@# Create output directory for images
 	mkdir -p image
 

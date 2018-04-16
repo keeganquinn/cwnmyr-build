@@ -13,5 +13,6 @@ RUN apt-get update -qq \
 RUN cpanm --skip-satisfied \
   NetAddr::IP::Lite Getopt::Long JSON LWP::Simple LWP::Protocol::https
 
+ENV BUILD /src/ptpwrt-builder/build
 ENV LEDE /src/lede
 WORKDIR /src/ptpwrt-builder

@@ -1,6 +1,6 @@
 CONFIG_TARGET_ramips=y
 CONFIG_TARGET_ramips_mt7621=y
-CONFIG_TARGET_ramips_mt7621_DEVICE_ubnt-erx=y
+CONFIG_TARGET_ramips_mt7621_DEVICE_ubiquiti_edgerouterx=y
 CONFIG_DEVEL=y
 CONFIG_BUILD_LOG=y
 # CONFIG_BUSYBOX_CONFIG_BRCTL is not set
@@ -14,5 +14,6 @@ CONFIG_BUILD_LOG=y
 # CONFIG_PACKAGE_odhcp6c is not set
 # CONFIG_PACKAGE_ppp is not set
 # CONFIG_PACKAGE_ppp-mod-pppoe is not set
+CONFIG_PACKAGE_ptp-nocatauth=y
 CONFIG_PACKAGE_ptp-node=y
 

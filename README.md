@@ -46,11 +46,9 @@ target platform to have it included in the distribution.
 Usage
 -----
 
-On a system which is capable of building LEDE directly, simply run:
+Once all dependencies are available, simply run:
 
     make <target>
-
-You can also build in a Docker container. See the section below for details.
 
 Resulting images will be stored in the `image` subdirectory. If you do not
 select a target, all available targets will be built. Be aware, this can take
@@ -68,13 +66,18 @@ For interactive configuration changes:
 After updating the build configuration, you can perform a new build.
 
 
-Docker
-------
+Dependencies
+------------
 
-You can use Docker Compose to perform the build:
+The following Debian packages should be installed to run this script:
 
-    docker-compose build
-    docker-compose run main make <target>
+    build-essential ca-certificates cpanminus file flex gawk gcc-multilib git
+    libncurses5-dev libnet-ssleay-perl libcrypt-ssleay-perl libssl-dev
+    openssl pkg-config python rsync subversion unzip wget zlib1g-dev
 
-In a similar manner, you can simply prefix the `make` command with
-`docker-compose run main` to run any of the commands described above.
+In addition, the following CPAN packages should be installed:
+
+    NetAddr::IP::Lite Getopt::Long JSON LWP::Simple LWP::Protocol::https
+
+Users of other distributions should install the appropriate corresponding
+packages for their systems. Building on non-Linux systems is not recommended.

@@ -1,14 +1,14 @@
 #!/bin/sh
 
-LEDE=$1
+OPENWRT=$1
 
 set -e -x
 
-cp "${LEDE}"/bin/targets/ar71xx/mikrotik/*-mikrotik-vmlinux-initramfs.elf \
+cp "${OPENWRT}"/bin/targets/ar71xx/mikrotik/*-mikrotik-vmlinux-initramfs.elf \
    image/ptpwrt-rb493g-initramfs.elf
-cp "${LEDE}"/bin/targets/ar71xx/mikrotik/*-mikrotik-vmlinux-lzma.elf \
+cp "${OPENWRT}"/bin/targets/ar71xx/mikrotik/*-mikrotik-vmlinux-lzma.elf \
    image/ptpwrt-rb493g-lzma.elf
-cp "${LEDE}"/bin/targets/ar71xx/mikrotik/*-mikrotik-root.squashfs \
+cp "${OPENWRT}"/bin/targets/ar71xx/mikrotik/*-mikrotik-root.squashfs \
    image/ptpwrt-rb493g-root.squashfs
 
 exit 0

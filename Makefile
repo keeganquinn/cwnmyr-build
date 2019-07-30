@@ -1,9 +1,9 @@
-# Makefile: LEDE image generator for PTP nodes
+# Makefile: OperWrt image generator for cwnmyr
 
 devices := $(notdir $(wildcard device/*))
 
 BUILDER := $(shell dirname "$(realpath $(lastword $(MAKEFILE_LIST)))")
-LEDE ?= lede
+OPENWRT ?= openwrt
 
 .PHONY: default clean prepare all $(devices)
 
@@ -13,92 +13,93 @@ clean:
 	rm -rf image
 
 distclean: clean
-	rm -rf "$(LEDE)"
+	rm -rf "$(OPENWRT)"
 
 fetch:
-	@# Make sure we have the correct LEDE tree
-	[ -d "$(LEDE)" ] && \
-		(cd "$(LEDE)"; git fetch -q origin) || \
-		git clone -q git://git.lede-project.org/source.git "$(LEDE)"
-	(cd "$(LEDE)"; git checkout -q `cat "$(BUILDER)/rev/lede"`)
+	@# Make sure we have the correct OpenWrt tree
+	[ -d "$(OPENWRT)" ] && \
+		(cd "$(OPENWRT)"; git fetch -q origin) || \
+		git clone -q https://git.openwrt.org/openwrt/openwrt.git \
+		"$(OPENWRT)"
+	(cd "$(OPENWRT)"; git checkout -q `cat "$(BUILDER)/rev/openwrt"`)
 
 	@# Symlink dl subdirectory, to avoid unneeded redownloading
 	mkdir -p dl
-	rm -rf "$(LEDE)/dl"
-	ln -s "$(BUILDER)/dl" "$(LEDE)/dl"
+	rm -rf "$(OPENWRT)/dl"
+	ln -s "$(BUILDER)/dl" "$(OPENWRT)/dl"
 
 	@# Create or link build directory
 	[ -n "$(BUILD)" ] && mkdir -p "$(BUILD)" || true
-	[ -n "$(BUILD)" -a ! -e "$(LEDE)/build_dir" ] && \
-		ln -s "$(BUILD)" "$(LEDE)/build_dir" || true
+	[ -n "$(BUILD)" -a ! -e "$(OPENWRT)/build_dir" ] && \
+		ln -s "$(BUILD)" "$(OPENWRT)/build_dir" || true
 
-	mkdir -p "$(LEDE)/feeds"
-	cp feeds.conf "$(LEDE)/feeds.conf"
+	mkdir -p "$(OPENWRT)/feeds"
+	cp feeds.conf "$(OPENWRT)/feeds.conf"
 
 prepare: fetch
-	@# Make sure we have the right feeds trees. lede/scripts/feeds does
+	@# Make sure we have the right feeds trees. openwrt/scripts/feeds does
 	@# not support retrieving a specific git revision, so we have to do
 	@# this ourselves.
 	cat feeds.conf | while read line; do \
 		feed=`echo $$line | cut -f2 -d' ' -`; \
 		url=`echo $$line | cut -f3 -d' ' -`; \
-		[ -d "$(LEDE)/feeds/$$feed" ] && \
-			(cd "$(LEDE)/feeds/$$feed"; git fetch -q origin) || \
-			git clone -q $$url "$(LEDE)/feeds/$$feed"; \
-		(cd "$(LEDE)/feeds/$$feed"; \
+		[ -d "$(OPENWRT)/feeds/$$feed" ] && \
+			(cd "$(OPENWRT)/feeds/$$feed"; git fetch -q origin) || \
+			git clone -q $$url "$(OPENWRT)/feeds/$$feed"; \
+		(cd "$(OPENWRT)/feeds/$$feed"; \
 			git checkout -q `cat "$(BUILDER)/rev/$$feed"`); \
 	done
 
 	@# Update the package index and install all packages
-	"$(LEDE)/scripts/feeds" update -i
-	"$(LEDE)/scripts/feeds" install -a
+	"$(OPENWRT)/scripts/feeds" update -i
+	"$(OPENWRT)/scripts/feeds" install -a
 
-	@# Ensure critical parts of the LEDE tree are clean before
+	@# Ensure critical parts of the OpenWrt tree are clean before
 	@# (re)populating them
-	rm -rf "$(LEDE)/.config*" "$(LEDE)/bin" "$(LEDE)/files"
+	rm -rf "$(OPENWRT)/.config*" "$(OPENWRT)/bin" "$(OPENWRT)/files"
 
 	@# Create output directory for images
 	mkdir -p image
 
 	@# Populate files tree
-	cp -r files "$(LEDE)/files"
-	mkdir -p "$(LEDE)/files/rev"
-	git rev-parse HEAD > "$(LEDE)/files/rev/builder"
-	cp rev/* "$(LEDE)/files/rev/"
+	cp -r files "$(OPENWRT)/files"
+	mkdir -p "$(OPENWRT)/files/rev"
+	git rev-parse HEAD > "$(OPENWRT)/files/rev/builder"
+	cp rev/* "$(OPENWRT)/files/rev/"
 
 update: fetch
-	(cd "$(LEDE)"; git checkout -q master; git pull -q origin master)
-	(cd "$(LEDE)"; git rev-parse HEAD > "$(BUILDER)/rev/lede")
+	(cd "$(OPENWRT)"; git checkout -q master; git pull -q origin master)
+	(cd "$(OPENWRT)"; git rev-parse HEAD > "$(BUILDER)/rev/openwrt")
 
-	"$(LEDE)/scripts/feeds" update -i
+	"$(OPENWRT)/scripts/feeds" update -i
 	cat feeds.conf | while read line; do \
 		feed=`echo $$line | cut -f2 -d' ' -`; \
-		(cd "$(LEDE)/feeds/$$feed"; \
+		(cd "$(OPENWRT)/feeds/$$feed"; \
 			git checkout -q master; git pull -q origin master); \
-		(cd "$(LEDE)/feeds/$$feed"; \
+		(cd "$(OPENWRT)/feeds/$$feed"; \
 			git rev-parse HEAD > "$(BUILDER)/rev/$$feed"); \
 	done
 
 	@# Update the package index and install all packages
-	"$(LEDE)/scripts/feeds" update -i
-	"$(LEDE)/scripts/feeds" install -a
+	"$(OPENWRT)/scripts/feeds" update -i
+	"$(OPENWRT)/scripts/feeds" install -a
 
 all: $(devices)
 
 define build
 $(1): prepare device/$(1)/config
-	@# Install and activate device-specific LEDE build configuration
-	cp "device/$(1)/config" "$(LEDE)/.config"
-	(cd "$(LEDE)"; make defconfig)
-	cp "$(LEDE)/.config" "$(LEDE)/files/config"
+	@# Install and activate device-specific OpenWrt build configuration
+	cp "device/$(1)/config" "$(OPENWRT)/.config"
+	(cd "$(OPENWRT)"; make defconfig)
+	cp "$(OPENWRT)/.config" "$(OPENWRT)/files/config"
 
 	@# Perform build, triggering hook scripts as needed
 	[ -x "device/$(1)/prebuild" ] && \
-		"device/$(1)/prebuild" "$(LEDE)" || true
-	(cd "$(LEDE)"; \
+		"device/$(1)/prebuild" "$(OPENWRT)" || true
+	(cd "$(OPENWRT)"; \
 		make BUILD_LOG=1 FORCE_UNSAFE_CONFIGURE=1 IGNORE_ERRORS=m V=99)
 	[ -x "device/$(1)/postbuild" ] && \
-		"device/$(1)/postbuild" "$(LEDE)" || true
+		"device/$(1)/postbuild" "$(OPENWRT)" || true
 endef
 
 $(foreach device, $(devices), $(eval $(call build,$(device))))

@@ -1,10 +1,10 @@
 #!/bin/sh
 
-LEDE=$1
+OPENWRT=$1
 
 set -e -x
 
-cp "${LEDE}"/bin/targets/x86/legacy/*-legacy-combined-squashfs.img.gz \
+cp "${OPENWRT}"/bin/targets/x86/legacy/*-legacy-combined-squashfs.img.gz \
    image/ptpwrt-net48xx.img.gz
 
 exit 0

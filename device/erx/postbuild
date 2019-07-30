@@ -1,10 +1,10 @@
 #!/bin/sh
 
-LEDE=$1
+OPENWRT=$1
 
 set -e -x
 
-cp "${LEDE}"/bin/targets/ramips/mt7621/*-erx-initramfs-kernel.bin \
+cp "${OPENWRT}"/bin/targets/ramips/mt7621/*-erx-initramfs-kernel.bin \
    image/ptpwrt-erx.bin
 
 exit 0

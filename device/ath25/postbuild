@@ -1,10 +1,10 @@
 #!/bin/sh
 
-LEDE=$1
+OPENWRT=$1
 
 set -e -x
 
-cp "${LEDE}"/bin/targets/ath25/generic/*-ath25-generic-squashfs-rootfs.bin \
+cp "${OPENWRT}"/bin/targets/ath25/generic/*-ath25-generic-squashfs-rootfs.bin \
    image/ptpwrt-ath25.bin
 
 exit 0

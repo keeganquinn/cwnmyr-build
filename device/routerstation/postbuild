@@ -1,10 +1,10 @@
 #!/bin/sh
 
-LEDE=$1
+OPENWRT=$1
 
 set -e -x
 
-cp "${LEDE}"/bin/targets/ar71xx/generic/*-rs-squashfs-factory.bin \
+cp "${OPENWRT}"/bin/targets/ar71xx/generic/*-rs-squashfs-factory.bin \
    image/ptpwrt-routerstation.bin
 
 exit 0

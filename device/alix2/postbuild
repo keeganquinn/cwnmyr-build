@@ -1,9 +1,9 @@
 #!/bin/sh
 
-LEDE=$1
+OPENWRT=$1
 
 set -e -x
 
-cp "${LEDE}"/bin/x86/*-alix2-combined-squashfs.img image/ptpwrt-alix2.img
+cp "${OPENWRT}"/bin/x86/*-alix2-combined-squashfs.img image/ptpwrt-alix2.img
 
 exit 0

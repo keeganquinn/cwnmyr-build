@@ -65,12 +65,6 @@ prepare: fetch
 	@# Create output directory for images
 	mkdir -p image
 
-	@# Populate files tree
-	cp -r files "$(OPENWRT)/files"
-	mkdir -p "$(OPENWRT)/files/rev"
-	git rev-parse HEAD > "$(OPENWRT)/files/rev/builder"
-	cp rev/* "$(OPENWRT)/files/rev/"
-
 update: fetch
 	(cd "files"; git checkout -q master; git pull -q origin master)
 	(cd "files"; git rev-parse HEAD > "$(BUILDER)/rev/files")
@@ -95,6 +89,12 @@ all: $(devices)
 
 define build
 $(1): prepare device/$(1)/config
+	@# Populate files tree
+	cp -r files/output "$(OPENWRT)/files"
+	mkdir -p "$(OPENWRT)/files/rev"
+	git rev-parse HEAD > "$(OPENWRT)/files/rev/builder"
+	cp rev/* "$(OPENWRT)/files/rev/"
+
 	@# Install and activate device-specific OpenWrt build configuration
 	cp "device/$(1)/config" "$(OPENWRT)/.config"
 	(cd "$(OPENWRT)"; make defconfig)

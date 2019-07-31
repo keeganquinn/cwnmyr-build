@@ -94,7 +94,7 @@ all: $(devices)
 define build
 $(1): prepare device/$(1)/config
 	@# Populate files tree
-	cp -r files/output "$(OPENWRT)/files"
+	cp -a files/output "$(OPENWRT)/files"
 	mkdir -p "$(OPENWRT)/files/rev"
 	git rev-parse HEAD > "$(OPENWRT)/files/rev/builder"
 	cp rev/* "$(OPENWRT)/files/rev/"

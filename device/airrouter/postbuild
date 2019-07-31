@@ -4,7 +4,7 @@ OPENWRT=$1
 
 set -e -x
 
-cp "${OPENWRT}"/bin/targets/ar71xx/generic/*-airrouter-squashfs-factory.bin \
-   image/ptpwrt-airrouter.bin
+cp "${OPENWRT}"/bin/targets/ath79/generic/*-ubnt_airrouter-*-factory.bin \
+   image/openwrt-airrouter.bin
 
 exit 0

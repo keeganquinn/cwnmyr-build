@@ -4,7 +4,7 @@ OPENWRT=$1
 
 set -e -x
 
-cp "${OPENWRT}"/bin/targets/apm821xx/nand/*-meraki_mr24-*-sysupgrade.tar \
-   image/ptpwrt-mr24.tar
+cp "${OPENWRT}"/bin/targets/apm821xx/nand/*-meraki_mr24-*-sysupgrade.bin \
+   image/openwrt-mr24.bin
 
 exit 0

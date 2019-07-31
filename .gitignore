@@ -2,7 +2,7 @@
 *#
 .#*
 .DS_Store
-build
-dl
-image
-lede
+/dl
+/files
+/image
+/openwrt

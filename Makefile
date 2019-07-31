@@ -16,6 +16,15 @@ distclean: clean
 	rm -rf "$(OPENWRT)"
 
 fetch:
+	@# Get the configurator
+	@# TODO: point back to personaltelco repo after PR is merged
+	[ -d "files" ] && \
+		(cd "files"; git fetch -q origin) || \
+		git clone -q \
+		git://github.com/keeganquinn/ptp-openwrt-files.git \
+		"files"
+	(cd "files"; git checkout -q `cat "$(BUILDER)/rev/files"`)
+
 	@# Make sure we have the correct OpenWrt tree
 	[ -d "$(OPENWRT)" ] && \
 		(cd "$(OPENWRT)"; git fetch -q origin) || \
@@ -27,11 +36,6 @@ fetch:
 	mkdir -p dl
 	rm -rf "$(OPENWRT)/dl"
 	ln -s "$(BUILDER)/dl" "$(OPENWRT)/dl"
-
-	@# Create or link build directory
-	[ -n "$(BUILD)" ] && mkdir -p "$(BUILD)" || true
-	[ -n "$(BUILD)" -a ! -e "$(OPENWRT)/build_dir" ] && \
-		ln -s "$(BUILD)" "$(OPENWRT)/build_dir" || true
 
 	mkdir -p "$(OPENWRT)/feeds"
 	cp feeds.conf "$(OPENWRT)/feeds.conf"
@@ -68,6 +72,9 @@ prepare: fetch
 	cp rev/* "$(OPENWRT)/files/rev/"
 
 update: fetch
+	(cd "files"; git checkout -q master; git pull -q origin master)
+	(cd "files"; git rev-parse HEAD > "$(BUILDER)/rev/files")
+
 	(cd "$(OPENWRT)"; git checkout -q master; git pull -q origin master)
 	(cd "$(OPENWRT)"; git rev-parse HEAD > "$(BUILDER)/rev/openwrt")
 

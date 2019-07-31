@@ -68,11 +68,15 @@ prepare: fetch
 	mkdir -p image
 
 update: fetch
-	(cd "files"; git checkout -q master; git pull -q origin master)
-	(cd "files"; git rev-parse HEAD > "$(BUILDER)/rev/files")
+	(cd "files"; \
+		git checkout -q master; \
+		git pull -q origin master; \
+		git rev-parse HEAD > "$(BUILDER)/rev/files")
 
-	(cd "$(OPENWRT)"; git checkout -q master; git pull -q origin master)
-	(cd "$(OPENWRT)"; git rev-parse HEAD > "$(BUILDER)/rev/openwrt")
+	(cd "$(OPENWRT)"; \
+		git checkout -q master; \
+		git pull -q origin master; \
+		git rev-parse HEAD > "$(BUILDER)/rev/openwrt")
 
 	"$(OPENWRT)/scripts/feeds" update -i
 	cat feeds.conf | while read line; do \
@@ -80,9 +84,28 @@ update: fetch
 		branch=`echo $$line | cut -f3 -d' ' - | cut -f2 -d';' -`; \
 		(cd "$(OPENWRT)/feeds/$$feed"; \
 			git checkout -q $$branch; \
-			git pull -q origin $$branch); \
-		(cd "$(OPENWRT)/feeds/$$feed"; \
+			git pull -q origin $$branch; \
 			git rev-parse HEAD > "$(BUILDER)/rev/$$feed"); \
+	done
+
+	@# Update the package index and install all packages
+	"$(OPENWRT)/scripts/feeds" update -i
+	"$(OPENWRT)/scripts/feeds" install -a
+
+rewind: fetch
+	(cd "$(OPENWRT)"; \
+		rev=`git rev-list -1 --before="$(DATE)" master`; \
+		git checkout -q $$rev; \
+		git rev-parse $$rev > "$(BUILDER)/rev/openwrt")
+
+	"$(OPENWRT)/scripts/feeds" update -i
+	cat feeds.conf | while read line; do \
+		feed=`echo $$line | cut -f2 -d' ' -`; \
+		branch=`echo $$line | cut -f3 -d' ' - | cut -f2 -d';' -`; \
+		(cd "$(OPENWRT)/feeds/$$feed"; \
+			rev=`git rev-list -1 --before="$(DATE)" $$branch`; \
+			git checkout -q $$rev; \
+			git rev-parse $$rev > "$(BUILDER)/rev/$$feed"); \
 	done
 
 	@# Update the package index and install all packages

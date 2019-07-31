@@ -46,9 +46,11 @@ prepare: fetch
 	@# this ourselves.
 	cat feeds.conf | while read line; do \
 		feed=`echo $$line | cut -f2 -d' ' -`; \
-		url=`echo $$line | cut -f3 -d' ' -`; \
+		url=`echo $$line | cut -f3 -d' ' - | cut -f1 -d';' -`; \
 		[ -d "$(OPENWRT)/feeds/$$feed" ] && \
-			(cd "$(OPENWRT)/feeds/$$feed"; git fetch -q origin) || \
+			(cd "$(OPENWRT)/feeds/$$feed"; \
+				git remote set-url origin $$url; \
+				git fetch -q origin) || \
 			git clone -q $$url "$(OPENWRT)/feeds/$$feed"; \
 		(cd "$(OPENWRT)/feeds/$$feed"; \
 			git checkout -q `cat "$(BUILDER)/rev/$$feed"`); \
@@ -75,8 +77,10 @@ update: fetch
 	"$(OPENWRT)/scripts/feeds" update -i
 	cat feeds.conf | while read line; do \
 		feed=`echo $$line | cut -f2 -d' ' -`; \
+		branch=`echo $$line | cut -f3 -d' ' - | cut -f2 -d';' -`; \
 		(cd "$(OPENWRT)/feeds/$$feed"; \
-			git checkout -q master; git pull -q origin master); \
+			git checkout -q $$branch; \
+			git pull -q origin $$branch); \
 		(cd "$(OPENWRT)/feeds/$$feed"; \
 			git rev-parse HEAD > "$(BUILDER)/rev/$$feed"); \
 	done

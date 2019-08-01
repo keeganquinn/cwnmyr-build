@@ -114,7 +114,7 @@ rewind: fetch
 all: $(devices)
 
 define build
-$(1): prepare device/$(1)/config
+$(1): prepare device/$(1)
 	@# Populate files tree
 	cp -a files/output "$(OPENWRT)/files"
 	mkdir -p "$(OPENWRT)/files/rev"
@@ -122,7 +122,8 @@ $(1): prepare device/$(1)/config
 	cp rev/* "$(OPENWRT)/files/rev/"
 
 	@# Install and activate device-specific OpenWrt build configuration
-	cp "device/$(1)/config" "$(OPENWRT)/.config"
+	cp "$(OPENWRT)/feeds/ptpcab/ptp-node/files/.config-$(1)" \
+		"$(OPENWRT)/.config"
 	(cd "$(OPENWRT)"; make defconfig)
 	cp "$(OPENWRT)/.config" "$(OPENWRT)/files/config"
 

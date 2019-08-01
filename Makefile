@@ -17,11 +17,10 @@ distclean: clean
 
 fetch:
 	@# Get the configurator
-	@# TODO: point back to personaltelco repo after PR is merged
 	[ -d "files" ] && \
 		(cd "files"; git fetch -q origin) || \
 		git clone -q \
-		git://github.com/keeganquinn/ptp-openwrt-files.git \
+		git://github.com/personaltelco/ptp-openwrt-files.git \
 		"files"
 	(cd "files"; git checkout -q `cat "$(BUILDER)/rev/files"`)
 

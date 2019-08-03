@@ -1,16 +1,14 @@
 # Makefile: OperWrt image generator for cwnmyr
 
-devices := $(notdir $(wildcard device/*))
-
 BUILDER := $(shell dirname "$(realpath $(lastword $(MAKEFILE_LIST)))")
 OPENWRT ?= openwrt
 
-.PHONY: default clean prepare all $(devices)
+.PHONY: default clean prepare build
 
-default: all
+default: build
 
 clean:
-	rm -rf image
+	rm -rf config files/output image postbuild prebuild
 
 distclean: clean
 	rm -rf "$(OPENWRT)"
@@ -111,28 +109,20 @@ rewind: fetch
 	"$(OPENWRT)/scripts/feeds" update -i
 	"$(OPENWRT)/scripts/feeds" install -a
 
-all: $(devices)
-
-define build
-$(1): prepare device/$(1)/config
+build: prepare config
 	@# Populate files tree
-	cp -a files/output "$(OPENWRT)/files"
+	cp -a "files/output" "$(OPENWRT)/files"
 	mkdir -p "$(OPENWRT)/files/rev"
 	git rev-parse HEAD > "$(OPENWRT)/files/rev/builder"
 	cp rev/* "$(OPENWRT)/files/rev/"
 
-	@# Install and activate device-specific OpenWrt build configuration
-	cp "device/$(1)/config" "$(OPENWRT)/.config"
+	@# Install and activate OpenWrt configuration
+	cp "./config" "$(OPENWRT)/.config"
 	(cd "$(OPENWRT)"; make defconfig)
 	cp "$(OPENWRT)/.config" "$(OPENWRT)/files/config"
 
 	@# Perform build, triggering hook scripts as needed
-	[ -x "device/$(1)/prebuild" ] && \
-		"device/$(1)/prebuild" "$(OPENWRT)" || true
+	[ -x "./prebuild" ] && "./prebuild" "$(OPENWRT)" || true
 	(cd "$(OPENWRT)"; \
 		make BUILD_LOG=1 FORCE_UNSAFE_CONFIGURE=1 IGNORE_ERRORS=m V=99)
-	[ -x "device/$(1)/postbuild" ] && \
-		"device/$(1)/postbuild" "$(OPENWRT)" || true
-endef
-
-$(foreach device, $(devices), $(eval $(call build,$(device))))
+	[ -x "./postbuild" ] && "./postbuild" "$(OPENWRT)" || true

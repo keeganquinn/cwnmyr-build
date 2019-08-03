@@ -15,13 +15,6 @@ config="${url}/build_config"
 postbuild="${url}/postbuild"
 prebuild="${url}/prebuild"
 
-echo
-echo "    Node config: ${node}"
-echo " OpenWrt config: ${config}"
-echo "Post-build hook: ${postbuild}"
-echo " Pre-build hook: ${prebuild}"
-echo
-
 set -ex
 
 make clean

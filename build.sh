@@ -47,10 +47,10 @@ make prepare
 
 (cd files; perl FOOCAB.pl --url "${node}")
 
-[ -x "./prebuild" ] && "./prebuild" "$(OPENWRT)"
+[ -x "./prebuild" ] && "./prebuild" "${OPENWRT}"
 
 make build
 
-[ -x "./postbuild" ] && "./postbuild" "$(OPENWRT)"
+[ -x "./postbuild" ] && "./postbuild" "${OPENWRT}"
 
 exit 0

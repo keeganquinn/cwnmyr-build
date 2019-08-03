@@ -2,7 +2,7 @@
 
 # Build an image for a device.
 
-OPENWRT=${OPENWRT:-openwrt}
+export OPENWRT=${OPENWRT:-openwrt}
 
 url=$1
 

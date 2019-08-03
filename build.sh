@@ -2,6 +2,8 @@
 
 # Build an image for a device.
 
+OPENWRT=${OPENWRT:-openwrt}
+
 url=$1
 
 [ -z "${url}" ] && echo "Usage: ./build.sh <url>" && exit 2
@@ -23,17 +25,18 @@ echo
 set -ex
 
 make clean
+rm -rf ./config ./files/output ./postbuild ./prebuild
 
-curl "${config}" -o "./config"
+curl -o "./config" -s "${config}"
 
-curl "${postbuild}" -o "./postbuild"
+curl -o "./postbuild" -s "${postbuild}"
 if [ -s "./postbuild" ]; then
     chmod +x "./postbuild"
 else
     rm -f "./postbuild"
 fi
 
-curl "${prebuild}" -o "./prebuild"
+curl -o "./prebuild" -s "${prebuild}"
 if [ -s "./prebuild" ]; then
     chmod +x "./prebuild"
 else
@@ -44,6 +47,10 @@ make prepare
 
 (cd files; perl FOOCAB.pl --url "${node}")
 
+[ -x "./prebuild" ] && "./prebuild" "$(OPENWRT)"
+
 make build
+
+[ -x "./postbuild" ] && "./postbuild" "$(OPENWRT)"
 
 exit 0

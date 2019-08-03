@@ -8,7 +8,7 @@ OPENWRT ?= openwrt
 default: build
 
 clean:
-	rm -rf config files/output image postbuild prebuild
+	rm -rf image
 
 distclean: clean
 	rm -rf "$(OPENWRT)"
@@ -122,7 +122,5 @@ build: prepare config
 	cp "$(OPENWRT)/.config" "$(OPENWRT)/files/config"
 
 	@# Perform build, triggering hook scripts as needed
-	[ -x "./prebuild" ] && "./prebuild" "$(OPENWRT)" || true
 	(cd "$(OPENWRT)"; \
 		make BUILD_LOG=1 FORCE_UNSAFE_CONFIGURE=1 IGNORE_ERRORS=m V=99)
-	[ -x "./postbuild" ] && "./postbuild" "$(OPENWRT)" || true

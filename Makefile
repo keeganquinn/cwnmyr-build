@@ -1,4 +1,4 @@
-# Makefile: OperWrt image generator for cwnmyr
+# Makefile: OpenWrt reproducible build wrapper
 
 BUILDER := $(shell dirname "$(realpath $(lastword $(MAKEFILE_LIST)))")
 OPENWRT ?= openwrt

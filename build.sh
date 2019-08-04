@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Build an image for a device.
+# Build an image for a device based on config data from cwnmyr.
 
 export OPENWRT=${OPENWRT:-openwrt}
 
@@ -12,38 +12,19 @@ echo "Device configuration URL: ${url}"
 
 node="${url}/conf.json"
 config="${url}/build_config"
-postbuild="${url}/postbuild"
-prebuild="${url}/prebuild"
 
 set -ex
 
 make clean
-rm -rf ./config ./files/output ./postbuild ./prebuild
-
-curl -o "./config" -s "${config}"
-
-curl -o "./postbuild" -s "${postbuild}"
-if [ -s "./postbuild" ]; then
-    chmod +x "./postbuild"
-else
-    rm -f "./postbuild"
-fi
-
-curl -o "./prebuild" -s "${prebuild}"
-if [ -s "./prebuild" ]; then
-    chmod +x "./prebuild"
-else
-    rm -f "./prebuild"
-fi
-
 make prepare
 
-(cd files; perl FOOCAB.pl --url "${node}")
+(cd files; rm -rf output; perl FOOCAB.pl --url "${node}")
 
-[ -x "./prebuild" ] && "./prebuild" "${OPENWRT}"
+rm -f "./config"
+curl -o "./config" -s "${config}"
 
 make build
 
-[ -x "./postbuild" ] && "./postbuild" "${OPENWRT}"
+cp "${OPENWRT}"/bin/targets/*/*/openwrt-* image/
 
 exit 0

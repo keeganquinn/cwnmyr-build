@@ -1,9 +1,0 @@
-#!/bin/sh
-
-OPENWRT=$1
-
-set -e -x
-
-cp "${OPENWRT}"/bin/targets/x86/64/*-combined-*.img.gz image/ptpwrt-apu.img.gz
-
-exit 0

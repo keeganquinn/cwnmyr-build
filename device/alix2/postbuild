@@ -1,9 +1,0 @@
-#!/bin/sh
-
-OPENWRT=$1
-
-set -e -x
-
-cp "${OPENWRT}"/bin/x86/*-alix2-combined-squashfs.img image/ptpwrt-alix2.img
-
-exit 0

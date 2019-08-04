@@ -32,13 +32,13 @@ Provide the URL to a device in cwnmyr, for example:
 
     ./build.sh https://cwnmyr.personaltelco.net/devices/134-cat
 
-Resulting images will be stored in the `image` subdirectory. Be aware, an
+Resulting images will be stored in the `image` subdirectory. Beware, an
 image build can take quite a long time and a lot of disk space.
 
 By default, a known-good set of OpenWrt sources and feeds will be used.
 To update to the latest OpenWrt and packages trees:
 
-    make <update
+    make update
 
 After updating the sources, you can perform a new build.
 

@@ -32,8 +32,16 @@ Provide the URL to a device in cwnmyr, for example:
 
     ./build.sh https://cwnmyr.personaltelco.net/devices/134-cat
 
-Resulting images will be stored in the `image` subdirectory. Beware, an
-image build can take quite a long time and a lot of disk space.
+Optionally, you can specify a buildroot location in the environment:
+
+    export OPENWRT=/src/openwrt
+
+The specified buildroot may already exist or it will be created. You may
+also use an `openwrt` symlink in the cwnmyr-build directory for this purpose.
+
+After a successful build, resulting images will be stored in the `image`
+subdirectory. Beware, an image build can take quite a long time and a lot of
+disk space.
 
 By default, a known-good set of OpenWrt sources and feeds will be used.
 To update to the latest OpenWrt and packages trees:

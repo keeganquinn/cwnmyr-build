@@ -40,8 +40,8 @@ packages for their systems. Building on non-Linux systems is not recommended.
 Usage
 -----
 
-Once all dependencies are available, simply call `build.sh` and provide a URL
-to a cwnmyr device. For example:
+Once all dependencies are available, you may start a build by calling
+`build.sh` with a URL to a cwnmyr device. For example:
 
     ./build.sh https://cwnmyr.personaltelco.net/devices/134-cat
 
@@ -72,8 +72,8 @@ To set the revisions to match a past date:
 
 You may also freely edit `feeds.conf` to meet your needs; all git sources
 are supported. Be sure to specify the branch for each feed, even when it
-is the `master` branch. Run `make update` again after changing `feeds.conf`
-to ensure new revision files are created.
+is master, as shown in the provided file. Simply run `make update` again
+after changing `feeds.conf` to ensure new revision files are created.
 
 These reproducible build features are implemented in `Makefile` and can be
 used with any OpenWrt buildroot independent from the cwnmyr build script.

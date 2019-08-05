@@ -18,7 +18,7 @@ fetch:
 	[ -d "files" ] && \
 		(cd "files"; git fetch -q origin) || \
 		git clone -q \
-		git://github.com/personaltelco/ptp-openwrt-files.git \
+		git://github.com/keeganquinn/ptp-openwrt-files.git \
 		"files"
 	(cd "files"; git checkout -q `cat "$(BUILDER)/rev/files"`)
 

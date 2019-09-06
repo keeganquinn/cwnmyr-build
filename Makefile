@@ -11,7 +11,7 @@ clean:
 	rm -rf image
 
 distclean: clean
-	rm -rf "$(OPENWRT)"
+	rm -rf "files" "splash" "$(OPENWRT)"
 
 fetch:
 	@# Get the configurator
@@ -21,6 +21,14 @@ fetch:
 		git://github.com/keeganquinn/ptp-openwrt-files.git \
 		"files"
 	(cd "files"; git checkout -q `cat "$(BUILDER)/rev/files"`)
+
+	@# Get the splash page builder
+	[ -d "splash"] && \
+		(cd "splash"; git fetch -q origin) || \
+		git clone -q \
+		git://github.com/keeganquinn/ptp-splash-page.git \
+		"splash"
+	(cd "splash"; git checkout -q `cat $(BUILDER)/rev/splash"`)
 
 	@# Make sure we have the correct OpenWrt tree
 	[ -d "$(OPENWRT)" ] && \

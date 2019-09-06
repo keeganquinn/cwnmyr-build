@@ -18,7 +18,12 @@ set -ex
 make clean
 make prepare
 
-(cd files; rm -rf output; perl FOOCAB.pl --url "${node}")
+cp config.json splash/config/
+(cd splash; yarn install; yarn build)
+
+rm -rf files/output files/splash
+cp -a splash/htdocs files/splash
+(cd files; perl FOOCAB.pl --url "${node}")
 
 rm -f "./config"
 curl -o "./config" -s "${config}"

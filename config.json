@@ -1,0 +1,6 @@
+{
+    "apiserver" : "cwnmyr.personaltelco.net",
+    "staticserver": "personaltelco.net",
+    "apibaseurl" : "https://cwnmyr.personaltelco.net",
+    "staticbaseurl": "https://personaltelco.net/splash"
+}

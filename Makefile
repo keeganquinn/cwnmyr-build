@@ -23,12 +23,12 @@ fetch:
 	(cd "files"; git checkout -q `cat "$(BUILDER)/rev/files"`)
 
 	@# Get the splash page builder
-	[ -d "splash"] && \
+	[ -d "splash" ] && \
 		(cd "splash"; git fetch -q origin) || \
 		git clone -q \
 		git://github.com/keeganquinn/ptp-splash-page.git \
 		"splash"
-	(cd "splash"; git checkout -q `cat $(BUILDER)/rev/splash"`)
+	(cd "splash"; git checkout -q `cat "$(BUILDER)/rev/splash"`)
 
 	@# Make sure we have the correct OpenWrt tree
 	[ -d "$(OPENWRT)" ] && \
@@ -77,6 +77,11 @@ update: fetch
 		git checkout -q master; \
 		git pull -q origin master; \
 		git rev-parse HEAD > "$(BUILDER)/rev/files")
+
+	(cd "splash"; \
+		git checkout -q master; \
+		git pull -q origin master; \
+		git rev-parse HEAD > "$(BUILDER)/rev/splash")
 
 	(cd "$(OPENWRT)"; \
 		git checkout -q master; \

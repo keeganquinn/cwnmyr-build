@@ -23,7 +23,10 @@ make prepare
 rm -rf files/output files/splash
 cp -a splash/htdocs files/splash
 
-(cd files; perl FOOCAB.pl --url "${node}")
+cpanm -l "./perl5" \
+      NetAddr::IP::Lite Getopt::Long JSON LWP::Simple LWP::Protocol::https
+PERL5LIB=$(readlink -f "./perl5/lib/perl5")
+(cd files; PERL5LIB="${PERL5LIB}" perl FOOCAB.pl --url "${node}")
 
 rm -f "./config"
 curl -o "./config" -s "${config}"

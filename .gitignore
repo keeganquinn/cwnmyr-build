@@ -1,10 +1,7 @@
-*~
-*#
-.#*
-.DS_Store
 /config
-/dl
-/files
-/image
-/openwrt
-/splash
+/dl/
+/files/
+/image/
+/openwrt/
+/perl5/
+/splash/

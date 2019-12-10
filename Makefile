@@ -3,6 +3,12 @@
 BUILDER := $(shell dirname "$(realpath $(lastword $(MAKEFILE_LIST)))")
 OPENWRT ?= openwrt
 
+FILES_REMOTE := https://github.com/keeganquinn/ptp-openwrt-files.git
+FILES_BRANCH := cleanup
+
+SPLASH_REMOTE := https://github.com/keeganquinn/ptp-splash-page.git
+SPLASH_BRANCH := cleanup
+
 .PHONY: default clean prepare build
 
 default: build
@@ -11,23 +17,19 @@ clean:
 	rm -rf image
 
 distclean: clean
-	rm -rf "files" "splash" "$(OPENWRT)"
+	rm -rf "files" "perl5" "splash" "$(OPENWRT)"
 
 fetch:
 	@# Get the configurator
 	[ -d "files" ] && \
 		(cd "files"; git fetch -q origin) || \
-		git clone -q \
-		git://github.com/personaltelco/ptp-openwrt-files.git \
-		"files"
+		git clone -q "$(FILES_REMOTE)" "files"
 	(cd "files"; git checkout -q `cat "$(BUILDER)/rev/files"`)
 
 	@# Get the splash page builder
 	[ -d "splash" ] && \
 		(cd "splash"; git fetch -q origin) || \
-		git clone -q \
-		git://github.com/keeganquinn/ptp-splash-page.git \
-		"splash"
+		git clone -q "$(SPLASH_REMOTE)" "splash"
 	(cd "splash"; git checkout -q `cat "$(BUILDER)/rev/splash"`)
 
 	@# Make sure we have the correct OpenWrt tree
@@ -74,13 +76,13 @@ prepare: fetch
 
 update: fetch
 	(cd "files"; \
-		git checkout -q master; \
-		git pull -q origin master; \
+		git checkout -q "$(FILES_BRANCH)"; \
+		git pull -q origin "$(FILES_BRANCH)"; \
 		git rev-parse HEAD > "$(BUILDER)/rev/files")
 
 	(cd "splash"; \
-		git checkout -q master; \
-		git pull -q origin master; \
+		git checkout -q "$(SPLASH_BRANCH)"; \
+		git pull -q origin "$(SPLASH_BRANCH)"; \
 		git rev-parse HEAD > "$(BUILDER)/rev/splash")
 
 	(cd "$(OPENWRT)"; \

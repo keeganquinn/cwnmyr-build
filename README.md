@@ -27,11 +27,7 @@ The following Debian packages should be installed to run this script:
 
     build-essential ca-certificates cpanminus file flex gawk gcc-multilib git
     libncurses5-dev libnet-ssleay-perl libcrypt-ssleay-perl libssl-dev
-    openssl pkg-config python rsync subversion unzip wget zlib1g-dev
-
-In addition, the following CPAN packages should be installed:
-
-    NetAddr::IP::Lite Getopt::Long JSON LWP::Simple LWP::Protocol::https
+    openssl pkg-config python rsync unzip wget zlib1g-dev
 
 Users of other distributions should install the appropriate corresponding
 packages for their systems. Building on non-Linux systems is not recommended.

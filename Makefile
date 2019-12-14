@@ -127,6 +127,8 @@ rewind: fetch
 build: prepare config
 	@# Populate files tree
 	cp -a "files/output" "$(OPENWRT)/files"
+	rm -f "$(OPENWRT)/files/etc/crontabs" "$(OPENWRT)/files/etc/rc.local"
+
 	mkdir -p "$(OPENWRT)/files/rev"
 	git rev-parse HEAD > "$(OPENWRT)/files/rev/builder"
 	cp rev/* "$(OPENWRT)/files/rev/"
